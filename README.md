@@ -36,7 +36,7 @@ Coming soon...
 - [ ] Add ability to take screenshots
 - [X] Implement .exe generation with pyinstaller
 - [ ] Add functionality to bundle payloads with .lnk's for extension spoofing + disk image packing
-- [ ] Fully python implant to C#
-- [ ] Add some post-exploitation modules
-- [X] Add ability for implant/teamserver to fallback to a new token
+- [ ] Fully port python implant to C#
+- [ ] Add post-exploitation modules
+- [X] Add ability for implant/teamserver to fallback to a new token if tasked
 - [ ] Have implant/teamserver automatically attempt to fallback if connection is lost
