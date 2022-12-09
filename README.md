@@ -32,6 +32,7 @@ Coming soon...
 - [ ] Add advanced functionality (steal token, process injection, etc)
 - [ ] Implement other Canarytoken formats for C2 communication
 - [ ] Add ability to connect to listening implant/manage multiple implants
+- [ ] Encrypt the payloads instead of encoding
 - [ ] Add ability to download/upload files
 - [ ] Add ability to take screenshots
 - [X] Implement .exe generation with pyinstaller
