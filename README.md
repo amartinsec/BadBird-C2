@@ -26,9 +26,10 @@ Coming soon...
 
 <br>
 
+
 ## TODO
 
-- [ ] Release pre-alpha version here once the codebase is fixed
+- [ ] Release pre-alpha version once the codebase is fixed
 - [ ] Add advanced functionality (steal token, process injection, etc)
 - [ ] Implement other Canarytoken formats for C2 communication
 - [ ] Add ability to connect to listening implant/manage multiple implants
