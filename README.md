@@ -35,10 +35,11 @@ Coming soon...
 - [ ] Add ability to connect to listening implant/manage multiple implants
 - [ ] Encrypt the payloads instead of encoding
 - [ ] Add ability to download/upload files
-- [ ] Add ability to take screenshots
+- [ ] Add ability to take screenshots - In progress. Has the ability to only take partial screenshots 
 - [X] Implement .exe generation with pyinstaller
 - [ ] Add functionality to bundle payloads with .lnk's for extension spoofing + disk image packing
 - [ ] Fully port python implant to C#
-- [ ] Add post-exploitation modules
+- [ ] Add post-exploitation modules - In progress
+- [X] Keylogger
 - [X] Add ability for implant/teamserver to fallback to a new token if tasked
-- [ ] Have implant/teamserver automatically attempt to fallback if connection is lost
+- [ ] Have implant/teamserver automatically attempt to fallback if connection is lost - In progress.
