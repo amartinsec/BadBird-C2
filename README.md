@@ -224,6 +224,7 @@ Will be published when code is
 
 ## Requirements
 Python 3+
+Implant only works on Windows systems
 Alot of dependencies (This will change when I refactor)
 
 <br>
