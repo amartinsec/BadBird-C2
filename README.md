@@ -149,4 +149,4 @@ Run `help` to see a list of commands within the BadBird shell.
 ## Disclaimer 
 This is meant for research purposes only. I made this very late at night out of my own curiosity. 
 
-Your actions are your responsibility so be responsible. Thinkst is an amazing platform that provides the canarytokens.org platform for free and I'd recommend you researching more into the company if you are unfamiliar.
+Your actions are your responsibility so be responsible. Thinkst is an amazing platform that provides the canarytokens.org platform for free, and I'd recommend researching more if you are unfamiliar.
