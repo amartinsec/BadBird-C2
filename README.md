@@ -17,7 +17,7 @@
 
 <br>
 
-### Requirements
+## Requirements
 - Python 3
 - Implant must run on Windows
 - C2 Server must be run on Windows (working on *nix support)
@@ -26,7 +26,7 @@
 
 <br>
 
-### Installation
+## Installation
 ```
 git clone https://github.com/amartinsec/BadBird.git
 cd BadBird/
@@ -38,7 +38,7 @@ python3 c2Server.py
 <br>
 
 
-### Transfer of Data
+## Transfer of Data
 When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
 through http requests and obtaining data through the reporting mechanism. Using this method, there are two major limitations
 that BadBird C2 has to follow to maintain stability:
