@@ -3,9 +3,7 @@ init(convert=True)
 
 def welcome():
     # Just some ASCII art
-    print("")
-
-    print(Fore.RED + "            .-.   ")
+    print("\n"+Fore.RED + "            .-.   ")
     print("           (  '>   " + Fore.GREEN + "BadBird C2" + Fore.RED )
     print("           /  \\     ")
     print("          /  \ |")
