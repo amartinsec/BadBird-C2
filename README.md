@@ -11,14 +11,13 @@
 
 # BadBird C2
 
-*BadBird can be unstable for large data transfers such as screenshots. I am working to improve stability as time permits.*
+*BadBird can be unstable at times as this is the first release. I am working to improve stability as time permits.*
 
 
 ### Requirements
 - Python 3
 - Implant must run on Windows
-- C2 Server must be run on Windows
-    - C2 Server will be able to run on *nix in the future
+- C2 Server must be run on Windows (working on *nix support)
 <br>
 
 ### Installation
@@ -65,6 +64,24 @@ Not yet implemented commands:
 	 Canary-endpoint:	Specify an endpoint for the implant to send results to. Default is a random path from the platforms options (TODO)
 
 ```
+
+<br>
+
+#### Transfer of Data
+When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
+through http requests and obtaining data through the reporting mechanism. Using this method, there are two major limitations
+that BadBird C2 has to follow to maintain stability:
+- Each response when triggering a token must have an encoded length of less than 7000 characters.
+- A token can only be triggered less than 50 times.
+
+BadBird C2 abides by these limitations by splitting the response into chunks and having the C2 Server reassemble. If the
+amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and facilitate with
+the implant.
+
+
+
+
+
 
 <br>
 
