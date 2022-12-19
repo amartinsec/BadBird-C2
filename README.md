@@ -27,8 +27,9 @@
 ### Installation
 ```
 git clone https://github.com/amartinsec/BadBird.git
-cd BadBird/BadBird/
+cd BadBird/
 pip3 install -r requirements.txt
+cd BadBird/
 python3 c2Server.py
 ```
 
