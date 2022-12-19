@@ -13,6 +13,7 @@
 
 *BadBird can be unstable at times as this is the first release. I am working to improve stability as time permits.*
 
+<br>
 
 ### Requirements
 - Python 3
