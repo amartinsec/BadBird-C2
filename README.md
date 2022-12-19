@@ -27,7 +27,18 @@ cd BadBird/BadBird
 pip3 install -r requirements.txt
 python3 c2Server.py
 ```
-<br>
+
+
+### Transfer of Data
+When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
+through http requests and obtaining data through the reporting mechanism. Using this method, there are two major limitations
+that BadBird C2 has to follow to maintain stability:
+- Each response when triggering a token must have an encoded length of less than 7000 characters.
+- A token can only be triggered less than 50 times.
+
+BadBird C2 abides by these limitations by splitting the response into chunks and having the C2 Server reassemble. If the
+amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and facilitate with
+the implant.
 
 ### Commands/Features
 Current Help Menu:
@@ -66,17 +77,6 @@ Not yet implemented commands:
 ```
 
 <br>
-
-#### Transfer of Data
-When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
-through http requests and obtaining data through the reporting mechanism. Using this method, there are two major limitations
-that BadBird C2 has to follow to maintain stability:
-- Each response when triggering a token must have an encoded length of less than 7000 characters.
-- A token can only be triggered less than 50 times.
-
-BadBird C2 abides by these limitations by splitting the response into chunks and having the C2 Server reassemble. If the
-amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and facilitate with
-the implant.
 
 
 
