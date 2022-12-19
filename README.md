@@ -19,6 +19,7 @@
 - Python 3
 - Implant must run on Windows
 - C2 Server must be run on Windows (working on *nix support)
+
 <br>
 
 ### Installation
@@ -28,6 +29,7 @@ cd BadBird/BadBird
 pip3 install -r requirements.txt
 python3 c2Server.py
 ```
+
 <br>
 
 
@@ -41,44 +43,74 @@ that BadBird C2 has to follow to maintain stability:
 BadBird C2 abides by these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
 amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and facilitate with
 the implant.
+
 <br>
 
 
-### Commands/Features
-Current Help Menu:
-```
-[+] CMD: help
-Creation:
-	 Create-token:	Fetches a new token from Canarytokens.org
-	 Create-implant:	Generates .exe or .py implant payload
+## Commands/Features
 
-Implant Interaction:
-	 Shell <command>:	Tasks the implant with a command
-	 Powershell <command>:	Tasks the implant with a PS command
-	 Screenshot:	Takes a screenshot of the host
-	 Keystrokes <command>:	Keylogging functionality. Commands are:`start` `stop` or `fetch`
-	 ps:	Prints the running processes on the host and highlights suspected AV in red
-	 Fallback:	Generates a new canarytoken for the and C2 to use implant switch to it
-	 Kill:	Kills the implant. `Kill clean` will kill the implant and removes implant (TODO Add implant removal)
-	 Sleep <seconds> <jitter>:	Changes the time that the implant sleeps(default 5 seconds). Use jitter value to randmly modify sleep time (TODO ADD JITTER IMPLEMENTATION)
+Run `help` to see a list of commands within the BadBird shell.
 
-Configuration/Misc:
-	 Email <blah@foobar.com>	changes the email used to create tokens. Default email is blah@foobar.com
-	 Exit:	Exits the C2
-	 Help:	Shows the help menu
-	 Canary-info:	Shows the current canary token info
-	 PWD:	Prints the current working directory in each return (less opsec safe)
+### Creation
 
-Not yet implemented commands:
-	 Log <log name>:	Logs all command and output to text file (TODO)
-	 Connect <canary management url>:	Connects to a listening implant (TODO)
-	 Download:	Tasks implant to download remote file from host (TODO)
-	 Upload:	Tasks implant to upload a file (TODO)
-	 Post-exp:	Enter the post-exp shell (TODO)
-	 Self-destruct:	Implant will remove itself after specified time of last C2 server checkin  (TODO)
-	 Canary-endpoint:	Specify an endpoint for the implant to send results to. Default is a random path from the platforms options (TODO)
+- create-token
+    - Fetches a new token from Canarytokens.org. Copy and paste the management url if running implant.py
+- create-implant
+    - Generates .exe (using pyinstaller) or .py implant payload. The resulting .exe/.py will have the management url added.
+    - If creating a .exe, you can choose one of the .ico files stored in resources/icons/ to use as the icon.
 
-```
+### Implant Interaction
+
+- shell \<command>
+    - Tasks the implant with a running a command through cmd.exe
+- powershell \<command>
+    - Tasks the implant with a running a command through powershell.exe
+- screenshot
+    - Takes a screenshot and stores it in loot/\<implant name>/
+    - The implant will attempt to take the best screenshot possible while staying under 45 token alerts
+    - Multiple screens will cause the image to be shrunk to abide by the limit
+- keystrokes \<start stop fetch>
+    - Will capture typed keys and the corresponding focused window
+    - `keystrokes start` will task the implant to start logging keystrokes
+    - `keystrokes stop` will stop keylogging
+    - `keystrokes fetch` will fetch the keystrokes from the implant and save to loot/\<implant name>/
+- ps
+    - Prints the running processes on the host and highlights processes based on type
+- fallback
+    - Generates a new canarytoken for the and C2 to use implant switch to it
+    - C2 Server will coordinate with the implant and automatically switch to the new token
+- kill
+    - Kills the implant
+    - TODO: Add self-removal
+- sleep
+    - Sleeps the implant for a specified amount of time
+    - TODO: Add jitter functionality
+
+### Configuration/Misc
+
+- email
+    - Sets the email to be used for token generation. Default is `blah@foobar.com`
+    - Entering a real email will result in receiving many emails for each task/result
+- exit
+    - Exits the BadBird shell
+- help
+    - Prints the help menu
+- canary-info
+    - Prints the current canarytoken information (management url, token, etc)
+- PWD
+    - Adds the current working directory to the BadBird shell prompt
+    - Less OPSEC safe
+
+### Not yet implemented (coming soon features)
+
+- log
+- connect
+- download
+- upload
+- post-exp
+- self-destruct
+- canary-endpoint
+
 
 <br>
 <p align="center">
