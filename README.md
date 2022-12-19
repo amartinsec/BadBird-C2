@@ -27,6 +27,7 @@ cd BadBird/BadBird
 pip3 install -r requirements.txt
 python3 c2Server.py
 ```
+<br>
 
 
 ### Transfer of Data
@@ -39,6 +40,8 @@ that BadBird C2 has to follow to maintain stability:
 BadBird C2 abides by these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
 amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and facilitate with
 the implant.
+<br>
+
 
 ### Commands/Features
 Current Help Menu:
@@ -77,15 +80,6 @@ Not yet implemented commands:
 ```
 
 <br>
-
-
-
-
-
-
-<br>
-
-<br>
 <p align="center">
   <img src="https://github.com/amartinsec/BadBird/raw/main/Media/badbirdCreateImplant.gif" alt="Gif of BadBird creating and connecting to an implant"/>
 </p>
@@ -111,6 +105,7 @@ Not yet implemented commands:
 - [ ] Have implant/teamserver automatically attempt to fallback if connection is lost - In progress
 - [ ] Trobule shoot why C2 server is extremely unstable when running from *.nix
 
+<br>
 
 ## Disclaimer 
 This is meant for research purposes only. I made this very late at night out of my own curiosity. 
