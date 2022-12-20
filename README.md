@@ -42,7 +42,7 @@ python3 c2Server.py
 When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
 through the triggered tokens and reporting mechanism. Using this method, there are two major limitations
 that BadBird C2 has to follow to maintain stability:
-- Each response when triggering a token must have an encoded length of less than 7000 characters.
+- Data for a triggered token must have an encoded length of less than 7000 characters.
 - A token can only be triggered less than 50 times.
 
 BadBird C2 abides by these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
