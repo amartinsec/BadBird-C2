@@ -20,7 +20,7 @@ def welcome():
 
 def help():
 
-    print("Creation:")
+    print("\nCreation:")
     print("\t Create-token:\tFetches a new token from Canarytokens.org")
     print("\t Create-implant:\tGenerates .exe or .py implant payload")
     print("\nImplant Interaction:")

