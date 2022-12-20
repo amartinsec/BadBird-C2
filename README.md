@@ -21,7 +21,7 @@
 - Python 3
 - Implant must run on Windows
 - C2 Server must *currently* be run on Windows (working on *nix support)
-  - Due to the current color scheme, it's recommended to run from cmd.exe (not powershell's blue background)
+  - Due to the current color scheme, it's recommended to run from cmd.exe (powershell's blue background causes the color scheme to be hard to read)
   - This will be fixed soon
 
 <br>
