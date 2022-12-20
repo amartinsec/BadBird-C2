@@ -40,7 +40,7 @@ python3 c2Server.py
 
 ## Transfer of Data
 When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
-through http requests and obtaining data through the reporting mechanism. Using this method, there are two major limitations
+through the triggered tokens and reporting mechanism. Using this method, there are two major limitations
 that BadBird C2 has to follow to maintain stability:
 - Each response when triggering a token must have an encoded length of less than 7000 characters.
 - A token can only be triggered less than 50 times.
