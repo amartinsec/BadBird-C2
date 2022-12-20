@@ -90,6 +90,8 @@ Run `help` to see a list of commands within the BadBird shell.
 - sleep
     - Sleeps the implant for a specified amount of time
     - TODO: Add jitter functionality
+- download <filename>
+  - Downloads a file from the implant's host and stores it in loot/\<implant name>/
 
 ### Configuration/Misc
 
@@ -110,7 +112,6 @@ Run `help` to see a list of commands within the BadBird shell.
 
 - log
 - connect
-- download
 - upload
 - post-exp
 - self-destruct

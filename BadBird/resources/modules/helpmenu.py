@@ -23,6 +23,7 @@ def help():
     print("\nCreation:")
     print("\t Create-token:\tFetches a new token from Canarytokens.org")
     print("\t Create-implant:\tGenerates .exe or .py implant payload")
+
     print("\nImplant Interaction:")
     print("\t Shell <command>:\tTasks the implant with a command")
     print("\t Powershell <command>:\tTasks the implant with a PS command")
@@ -33,6 +34,8 @@ def help():
     print("\t Kill:\tKills the implant. `Kill clean` will kill the implant and removes implant (TODO Add implant removal)")
     print(
         "\t Sleep <seconds> <jitter>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter value to randmly modify sleep time (TODO ADD JITTER IMPLEMENTATION)")
+    print("\t Download <filename>:\tTasks implant to download remote file")
+
     print("\nConfiguration/Misc:")
     print("\t Email <blah@foobar.com>\tchanges the email used to create tokens. Default email is blah@foobar.com")
     print("\t Exit:\tExits the C2")
@@ -44,7 +47,6 @@ def help():
     print("\nNot yet implemented commands:")
     print("\t Log <log name>:\tLogs all command and output to text file (TODO)")
     print("\t Connect <canary management url>:\tConnects to a listening implant (TODO)")
-    print("\t Download:\tTasks implant to download remote file from host (TODO)")
     print("\t Upload:\tTasks implant to upload a file (TODO)")
     print("\t Post-exp:\tEnter the post-exp shell (TODO)")
     print("\t Self-destruct:\tImplant will remove itself after specified time of last C2 server checkin  (TODO)")

