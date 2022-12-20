@@ -44,22 +44,28 @@ def generateimplant(canaryManagementURL):
             if count == middle:
                 print("")
 
-        iconFile = str(input(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Icon file for the exe (choose one of the above): "))
+        while True:
+            iconFile = str(input(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Icon file for the exe (choose one of the above): "))
 
-        if iconFile in icons:
-            pass
+            if iconFile in icons:
+                break
+            if iconFile == "":
+                iconFile = "defaultexe.ico"
+                print(Fore.BLUE + "[!]" + Fore.RESET + " Using default icon file: " + iconFile + "\n")
+                break
+
+            else:
+                print(Fore.RED + "\n[-]" + Fore.RESET + " Invalid entry")
+
+    # Logic loop to ensure valid name
+    while True:
+        name = str(input(Fore.BLUE + "[!]" + Fore.RESET + " Name for implant (exclude the extension): "))
+        if ((name == "") or ("\\" in name) or ("/" in name)) or ("." in name) or (" " in name) or (os.path.exists("payloads/" + name + "/")):
+            print(Fore.RED + "\n[-]" + Fore.RESET + " Name cannot be empty or include forward/backslashes and name must be unique in /payloads folder.")
 
         else:
-            print(Fore.RED + "\n[-]" + Fore.RESET + " Invalid entry")
-            generateimplant()
+            break
 
-    name = str(input(Fore.BLUE + "[!]" + Fore.RESET + " Name for implant (exclude the extension): "))
-
-    if ((name == "") or ("\\" in name) or ("/" in name)) or ("." in name) or (
-    os.path.exists("payloads/" + name + "/")):
-        print(
-            Fore.RED + "\n[-]" + Fore.RESET + " Name cannot be empty or include forward/backslashes and name must be unique in /payloads folder.")
-        generateimplant()
 
     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Editing payload template with new token...")
 
