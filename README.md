@@ -116,7 +116,7 @@ Run `help` to see a list of commands within the BadBird shell.
     - Adds the current working directory to the BadBird shell prompt
     - Less OPSEC safe
 
-### Not yet implemented (coming soon features)
+### Features coming soon
 
 - log
   - Logs everything to a .txt file

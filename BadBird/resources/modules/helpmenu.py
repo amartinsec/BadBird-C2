@@ -44,7 +44,7 @@ def help():
     print("\t PWD:\tPrints the current working directory in each return (less opsec safe)")
 
 
-    print("\nNot yet implemented commands:")
+    print("\nCommands coming soon:")
     print("\t Log <log name>:\tLogs all command and output to text file (TODO)")
     print("\t Connect <canary management url>:\tConnects to a listening implant (TODO)")
     print("\t Upload:\tTasks implant to upload a file (TODO)")
