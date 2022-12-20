@@ -13,7 +13,7 @@
 
 # BadBird C2
 
-*BadBird can be unstable at times as this is the first release. I am working to improve stability as time permits.*
+*BadBird is still in active development, but I didn't want to wait before releasing. I am working to improve stability as time permits.*
 
 <br>
 
