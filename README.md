@@ -118,7 +118,7 @@ Run `help` to see a list of commands within the BadBird shell.
 
 
 <br>
-<p align="center">
+<p>
   <img src="https://github.com/amartinsec/BadBird/raw/main/Media/badbirdCreateImplant.gif" alt="Gif of BadBird creating and connecting to an implant"/>
 </p>
 
