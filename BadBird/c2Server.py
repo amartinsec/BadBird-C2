@@ -204,6 +204,7 @@ def getResults(lastdictsize):
                             Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble from " + command + " chunked requests...\n")
                         showChunkWarning = False
                         tChunk = threading.Thread(target=chunkAnimate)
+                        tChunk.daemon = True
                         tChunk.start()
 
                     while True:
@@ -263,6 +264,7 @@ def getResults(lastdictsize):
                             Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble screenshot from " + command + " chunked requests...\n")
                         showChunkWarning = False
                         tChunk = threading.Thread(target=chunkAnimate)
+                        tChunk.daemon = True
                         tChunk.start()
 
                     while True:
@@ -325,6 +327,7 @@ def getResults(lastdictsize):
                             Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble file from " + command + " chunked requests...\n")
                         showChunkWarning = False
                         tChunk = threading.Thread(target=chunkAnimate)
+                        tChunk.daemon = True
                         tChunk.start()
 
                     while True:
@@ -448,6 +451,7 @@ def wait_for_implant():
 
     # cool animation time
     t = threading.Thread(target=animateWaitForImplant)
+    t.daemon = True
     t.start()
 
     loop = True
@@ -531,6 +535,7 @@ def keystrokes(keychoice):
     elif keychoice == "fetch":
         cmd = base64.b64encode("keyfetch:".encode("utf-8"))
         tkeystrokes = threading.Thread(target=animateFetchKeylog)
+        tkeystrokes.daemon = True
         tkeystrokes.start()
 
 

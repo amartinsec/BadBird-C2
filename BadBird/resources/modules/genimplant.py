@@ -103,6 +103,7 @@ def generateimplant(canaryManagementURL):
 
         # cool animation time
         t = threading.Thread(target=animate)
+        t.daemon = True
         t.start()
 
         try:
