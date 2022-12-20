@@ -111,11 +111,17 @@ Run `help` to see a list of commands within the BadBird shell.
 ### Not yet implemented (coming soon features)
 
 - log
+  - Logs everything to a .txt file
 - connect
+  - Connects to a listening implant
 - upload
+  - Uploads a file to the implant's host
 - post-exp
+  - BadBird post-exploitation shell
 - self-destruct
+  - Kills the implant after a certain amount of time
 - canary-endpoint
+  - Sets the canarytoken alerting endpoint to use (currently random from options that canarytokens.org provides)
 
 
 <br>
