@@ -379,6 +379,5 @@ def main():
         #sleep before checking for new tasking
         time.sleep(int(sleepTime))
 
-
 if __name__ == '__main__':
     main()

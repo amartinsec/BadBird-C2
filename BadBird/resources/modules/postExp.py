@@ -24,11 +24,9 @@ def postExpWelcome():
 
 def postExpHelp():
 
-    print(Fore.GREEN + "[+]" + Fore.RESET + " Post Exploitation Shell")
-    print("\t`Back` or `Exit`\tReturns to the main menu")
-    print("\tHelp\tPrints this menu\n")
-
-
+    print(Fore.GREEN + "[+]" + Fore.RESET + " Post Exploitation Shell\n")
+    print("\t`Back` or `Exit`\tReturns to the main menu\n")
+    print("\tHelp\tPrints this menu")
     print("\tgetprivs\tGrabs the current user's privileges")
     print("\tgetuid\tReturns the current user's UID with the current token")
     print("\tkillproc\tKills a process by PID")
@@ -44,7 +42,7 @@ def postExpShell():
     postExpWelcome()
 
     while True:
-        user_input = input(Fore.GREEN + "BadBird" + Fore.RED + ">> " + Fore.RESET)
+        user_input = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
         if user_input.lower() == "back" or user_input.lower() == "exit":
             print(Fore.RESET + "Returning to main menu...\n")
             break
@@ -54,6 +52,3 @@ def postExpShell():
         else:
             print(Fore.RED + "[-]" + Fore.RESET + " Unknown command: " + user_input)
 
-
-
-postExpShell()

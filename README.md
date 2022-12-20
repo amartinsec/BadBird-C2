@@ -79,6 +79,14 @@ Run `help` to see a list of commands within the BadBird shell.
     - `keystrokes start` will task the implant to start logging keystrokes
     - `keystrokes stop` will stop keylogging
     - `keystrokes fetch` will fetch the keystrokes from the implant and save to loot/\<implant name>/
+    - Ex. output from ```keystrokes fetch```:
+  ```
+      -------------------< focused process name >-------------------
+      ----------------------- < Date/Time >-------------------------
+      haxor@l33t.com
+      super_secret_password <ENTER KEY>
+      --------------------------------------------------------------
+  ```
 - ps
     - Prints the running processes on the host and highlights processes based on type
 - fallback

@@ -648,12 +648,12 @@ def main():
     try:
         while True:
             if (pwd == False):
-                cmd = input(Fore.GREEN + "[+]" + Fore.RESET + " CMD: ")
+                cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
             else:
                 try:
                     cmd = input("\n" + Fore.GREEN + dir.strip() + "> " + Fore.RESET)
                 except:
-                    cmd = input(Fore.GREEN + "[+]" + Fore.RESET + " CMD: ")
+                    cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
 
 
 
@@ -764,6 +764,7 @@ def main():
 
             elif cmd.lower() == "post-exp":
                 if connected == True:
+                    print(Fore.BLUE + "[!]" + Fore.RESET + " Entering BadBird post-exploitation shell...\n")
                     postExpShell()
                 else:
                     print(
