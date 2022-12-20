@@ -132,27 +132,7 @@ Run `help` to see a list of commands within the BadBird shell.
 
 <br>
 
-
-## TODO
-
-- [ ] Implement other Canarytoken formats for C2 communication
-- [ ] Add ability to connect to listening implant/manage multiple implants
-- [ ] Encrypt the payloads instead of encoding
-- [ ] Add ability to download/upload files
-- [X] Add ability to take screenshots 
-- [X] Implement .exe generation with pyinstaller
-- [ ] Add functionality to bundle payloads with .lnk's for extension spoofing + disk image packing
-- [ ] Fully port python implant to C#
-- [ ] Add post-exploitation modules - In progress
-- [X] Keylogger
-- [ ] Staged payloads
-- [X] Add ability for implant/teamserver to fallback to a new token if tasked
-- [ ] Have implant/teamserver automatically attempt to fallback if connection is lost - In progress
-- [ ] Trobule shoot why C2 server is extremely unstable when running from *.nix
-
-<br>
-
 ## Disclaimer 
-This is meant for research purposes only. I made this very late at night out of my own curiosity. 
+This is meant for research purposes only. I made this very late at night out of my own curiosity to see if "it could be done". 
 
 Your actions are your responsibility so be responsible. Thinkst is an amazing platform that provides the canarytokens.org platform for free, and I'd recommend researching more if you are unfamiliar.
