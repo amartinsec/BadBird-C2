@@ -1,4 +1,4 @@
-
+```
                                (  .      )        ( 
              .-.            )           (           )   )
             (  '>                 .  '   .   '  .  '  . 
@@ -10,7 +10,7 @@
     ~~~//~~~~~~~~~~~~~~~~~~~~~~~~~~ BadBird C2~~~~~~~~~~~~~~~~~~~~~
                       Canary Tokens For Command and Control
                          @amartinsec/blog.amartinsec.com
-
+```
 # BadBird C2
 
 *BadBird C2 is still in active development, but I didn't want to wait before releasing. I am working to improve stability as time permits.*

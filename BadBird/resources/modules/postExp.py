@@ -25,11 +25,11 @@ def postExpWelcome():
 def postExpHelp():
 
     print(Fore.GREEN + "[+]" + Fore.RESET + " Post Exploitation Shell")
-    print("\t `Back` or `Exit`\tReturns to the main menu")
-    print("\t Help\tPrints this menu\n")
+    print("\t`Back` or `Exit`\tReturns to the main menu")
+    print("\tHelp\tPrints this menu\n")
 
 
-    print("\n\t \tgetprivs\tGrabs the current user's privileges")
+    print("\tgetprivs\tGrabs the current user's privileges")
     print("\tgetuid\tReturns the current user's UID with the current token")
     print("\tkillproc\tKills a process by PID")
     print("\tsysmon-kill\tStops sysmon")
@@ -37,7 +37,7 @@ def postExpHelp():
     print("\tcursed-chrome\tCursed Chrome implementation from mandatoryprogrammer")
     print("\tteam-thief <`cookies` or `snoop`>\tSteal the user's MS Teams session token or grabs cached conversations")
     print("\treg stuff\tFun post-exp registry stuff here")
-    print("\t Help:\tPrints this menu\n")
+    print("\tHelp:\tPrints this menu\n")
 
 
 def postExpShell():
@@ -46,9 +46,9 @@ def postExpShell():
     while True:
         user_input = input(Fore.GREEN + "BadBird" + Fore.RED + ">> " + Fore.RESET)
         if user_input.lower() == "back" or user_input.lower() == "exit":
+            print(Fore.RESET + "Returning to main menu...\n")
             break
         elif user_input.lower() == "help":
-            print(Fore.RESET + "Returning to main menu...\n")
             postExpHelp()
 
         else:
@@ -56,3 +56,4 @@ def postExpShell():
 
 
 
+postExpShell()
