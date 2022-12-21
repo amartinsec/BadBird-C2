@@ -97,6 +97,7 @@ Run `help` to see a list of commands within the BadBird shell.
     - TODO: Add self-removal
 - sleep \<seconds> \<jitter percentage>
     - Sleeps the implant for a specified amount of time
+    - Add jitter percentage amount to enable random jitter
 - download \<filename>
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
 

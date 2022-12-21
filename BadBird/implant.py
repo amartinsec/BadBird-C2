@@ -250,6 +250,7 @@ def connect(url,managementURL):
 
             else:
                 output = subprocess.check_output(command, shell=True)
+                time.sleep(.5)
                 output = output.decode('UTF-8').rstrip()
 
             #print("Output: " + output)
