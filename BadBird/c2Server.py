@@ -14,9 +14,6 @@ from colorama import init
 from fake_useragent import UserAgent
 
 
-init(convert=True)
-os.system('cls' if os.name == 'nt' else 'clear')
-
 from resources.modules.helpmenu import *
 from resources.modules.postExp import *
 from resources.modules.genimplant import *
@@ -540,7 +537,7 @@ def keystrokes(keychoice):
 
 
     else:
-        print(Fore.RED + "[-]" + Fore.RESET + " Error. Returning to main\n")
+        print(Fore.RED + "[-]" + Fore.RESET + " Error. Returning with keystrokes command\n")
         return
 
     headers = {
@@ -628,12 +625,14 @@ def animate():
 
 
 def main():
+    init(convert=True)
+    os.system('cls' if os.name == 'nt' else 'clear')
     welcome()
-    # Need to investigate further, but running on Linux was extremely unstable
+    # Need to investigate further, but running on Linux was extremely unstable so adding below:
     currentOS = platform.system()
     if (currentOS != "Windows"):
         print(
-            Fore.RED + "\n[-]" + Fore.RESET + " You can only generate an exe payload on a Windows system with pyinstaller. Current OS: " + currentOS + "\n")
+            Fore.RED + "\n[-]" + Fore.RESET + " As of now, must be ran on Windows. Sorry :( Current OS: " + currentOS + "\n")
         return
 
     global lastdictsize

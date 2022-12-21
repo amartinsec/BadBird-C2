@@ -34,6 +34,7 @@ def help():
     print("   Kill:\tKills the implant. `Kill clean` will kill the implant and removes implant (TODO Add implant removal)".expandtabs(35))
     print("   Sleep <seconds> <jitter %>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter a value to randmly modify sleep time by that percentage".expandtabs(35))
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
+    print("   Post-exp:\tEnter the post-exp shell - only steal-wifi is implemented at this time (TODO)".expandtabs(35))
 
     print("\nConfiguration/Misc:")
     print("   Email <blah@foobar.com>:\tChanges the email used to create tokens.".expandtabs(35))
@@ -46,7 +47,6 @@ def help():
     print("   Log:\tLogs all commands and output to text file within loot (TODO)".expandtabs(35))
     print("   Connect <management url>:\tConnects to a listening implant (TODO)".expandtabs(35))
     print("   Upload:\tTasks implant to upload a file (TODO)".expandtabs(35))
-    print("   Post-exp:\tEnter the post-exp shell (TODO)".expandtabs(35))
     print("   Self-destruct:\tImplant will remove itself after specified time of last C2 server checkin  (TODO)".expandtabs(35))
     print("   Canary-endpoint:\tSpecify an endpoint for the implant to send results to. Default is a random path from the platforms options (TODO)".expandtabs(35))
     print("   Token-type:\t Specifies the type of token to use (currently using web bug/URL token that canarytokens.org provides) (TODO)\n".expandtabs(

@@ -33,8 +33,6 @@ def generateimplant(canaryManagementURL):
         generateimplant()
 
     if (implantType == "exe"):
-        # Check what OS we are running on
-
         # more icons can be added to the /icon folder
         icons = os.listdir("resources/icons/")
         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Available .ico files in:")

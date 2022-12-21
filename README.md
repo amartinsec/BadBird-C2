@@ -100,6 +100,9 @@ Run `help` to see a list of commands within the BadBird shell.
     - Add jitter percentage amount to enable random jitter
 - download \<filename>
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
+- post-exp
+  - BadBird post-exploitation shell (currently in development)
+  - Only steal-wifi is implemented at this time
 
 ### Configuration/Misc
 
@@ -124,8 +127,6 @@ Run `help` to see a list of commands within the BadBird shell.
   - Connects to a listening implant
 - upload
   - Uploads a file to the implant's host
-- post-exp
-  - BadBird post-exploitation shell
 - self-destruct
   - Kills the implant after a certain amount of time
 - canary-endpoint
@@ -139,6 +140,11 @@ Run `help` to see a list of commands within the BadBird shell.
   <img src="https://github.com/amartinsec/BadBird/raw/main/Media/badbirdCreateImplant.gif" alt="Gif of BadBird creating and connecting to an implant"/>
 </p>
 
+
+<br>
+
+## Detection 
+Coming Soon
 
 <br>
 
