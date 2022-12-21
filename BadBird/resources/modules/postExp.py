@@ -3,6 +3,7 @@
 from colorama import Fore
 
 
+
 #!/usr/bin/env python3
 
 def postExpWelcome():
@@ -23,31 +24,32 @@ def postExpWelcome():
 
 
 def postExpHelp():
-
-    print(Fore.GREEN + "[+]" + Fore.RESET + " Post Exploitation Shell\n")
-    print("\t`Back` or `Exit`\tReturns to the main menu\n")
-    print("\tHelp\tPrints this menu")
-    print("\tgetprivs\tGrabs the current user's privileges")
-    print("\tgetuid\tReturns the current user's UID with the current token")
-    print("\tkillproc\tKills a process by PID")
-    print("\tsysmon-kill\tStops sysmon")
-    print("\tbyod\tAttempts to elevate to SYSTEM by using the BYOD (Bring-your-own-driver) method")
-    print("\tcursed-chrome\tCursed Chrome implementation from mandatoryprogrammer")
-    print("\tteam-thief <`cookies` or `snoop`>\tSteal the user's MS Teams session token or grabs cached conversations")
-    print("\treg stuff\tFun post-exp registry stuff here")
-    print("\tHelp:\tPrints this menu\n")
+    print(Fore.GREEN + "[+]" + Fore.RESET + " Post Exploitation Shell:\n")
+    print("   `Back` or `Exit`:\tReturns to the main menu".expandtabs(40))
+    print("   Help:\tPrints this menu".expandtabs(40))
+    print("   Steal-wifi:\tGrabs all saved wireless credentials".expandtabs(40))
+    print("   Getprivs:\tGrabs the current user's privileges(TODO)".expandtabs(40))
+    print("   Getuid:\tReturns the current user's UID with the current token(TODO)".expandtabs(40))
+    print("   Killproc:\tKills a process by PID(TODO)".expandtabs(40))
+    print("   Sysmon-kill:\tStops sysmon(TODO)".expandtabs(40))
+    print("   Byod:\tAttempts to elevate to SYSTEM by using the BYOD (Bring-your-own-driver) method(TODO)".expandtabs(40))
+    print("   Cursed-chrome:\tCursed Chrome implementation(TODO)".expandtabs(40))
+    print("   Team-thief <`cookies`/`snoop`>:\tSteal the user's MS Teams session token or grabs cached conversations(TODO)".expandtabs(40))
+    print("   Reg stuff:\tFun post-exp registry stuff here(TODO)\n".expandtabs(40))
 
 
 def postExpShell():
     postExpWelcome()
-
     while True:
-        user_input = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
+        user_input = input(Fore.GREEN + "Post-Exp>> " + Fore.RESET)
         if user_input.lower() == "back" or user_input.lower() == "exit":
             print(Fore.RESET + "Returning to main menu...\n")
-            break
+            return ""
         elif user_input.lower() == "help":
             postExpHelp()
+
+        elif user_input.lower() == "steal-wifi":
+            return "wificreds:"
 
         else:
             print(Fore.RED + "[-]" + Fore.RESET + " Unknown command: " + user_input)

