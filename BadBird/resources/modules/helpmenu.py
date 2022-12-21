@@ -49,3 +49,5 @@ def help():
     print("   Post-exp:\tEnter the post-exp shell (TODO)".expandtabs(35))
     print("   Self-destruct:\tImplant will remove itself after specified time of last C2 server checkin  (TODO)".expandtabs(35))
     print("   Canary-endpoint:\tSpecify an endpoint for the implant to send results to. Default is a random path from the platforms options (TODO)\n".expandtabs(35))
+    print("   Token-type:\t Specifies the type of token to use (currently using web bug/URL token that canarytokens.org provides) (TODO)\n".expandtabs(
+            35))
