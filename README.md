@@ -113,7 +113,7 @@ Run `help` to see a list of commands within the BadBird shell.
 - canary-info
     - Prints the current canarytoken information (management url, token, etc)
 - PWD
-    - Adds the current working directory to the BadBird shell prompt
+    - Adds the current working directory to the BadBird shell
     - Less OPSEC safe
 
 ### Features coming soon

