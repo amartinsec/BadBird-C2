@@ -95,10 +95,9 @@ Run `help` to see a list of commands within the BadBird shell.
 - kill
     - Kills the implant
     - TODO: Add self-removal
-- sleep
+- sleep \<seconds> \<jitter percentage>
     - Sleeps the implant for a specified amount of time
-    - TODO: Add jitter functionality
-- download <filename>
+- download \<filename>
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
 
 ### Configuration/Misc
@@ -119,7 +118,7 @@ Run `help` to see a list of commands within the BadBird shell.
 ### Features coming soon
 
 - log
-  - Logs everything to a .txt file
+  - Logs everything to a .txt file stored within the loot dir
 - connect
   - Connects to a listening implant
 - upload
