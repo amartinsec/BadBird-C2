@@ -32,7 +32,7 @@ def help():
     print("   Ps:\tPrints the running processes on the host and highlights suspected AV in red".expandtabs(35))
     print("   Fallback:\tGenerates a new canarytoken for the and C2 to use implant switch to it".expandtabs(35))
     print("   Kill:\tKills the implant. `Kill clean` will kill the implant and removes implant (TODO Add implant removal)".expandtabs(35))
-    print("   Sleep <seconds> <jitter>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter value to randmly modify sleep time (TODO ADD JITTER IMPLEMENTATION)".expandtabs(35))
+    print("   Sleep <seconds> <jitter %>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter a value to randmly modify sleep time by that percentage".expandtabs(35))
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
 
     print("\nConfiguration/Misc:")
