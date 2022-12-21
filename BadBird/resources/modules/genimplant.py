@@ -13,10 +13,10 @@ import PyInstaller.__main__
 from colorama import Fore
 
 def animate():
-    for c in itertools.cycle(['[|] Creating Exe', '[/] Creating Exe.', '[-] Creating Exe..', '[\\] Creating Exe...']):
+    for c in itertools.cycle([Fore.BLUE+'[|]'+Fore.RESET+' Creating Exe   ',Fore.BLUE+ '[/]'+Fore.RESET+' Creating Exe.  ',Fore.BLUE+ '[-]'+Fore.RESET+' Creating Exe.. ',Fore.BLUE+ '[\\]'+Fore.RESET+' Creating Exe...']):
         if done:
             break
-        sys.stdout.write('\r' + Fore.BLUE + c + Fore.RESET)
+        sys.stdout.write('\r' +c)
         sys.stdout.flush()
         time.sleep(0.25)
 

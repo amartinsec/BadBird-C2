@@ -130,11 +130,11 @@ def taskCommand(cmd):
 
 # Animate for chunking
 def chunkAnimate():
-    for c in itertools.cycle(['[|] Rebuilding Output', '[/] Rebuilding Output.', '[-] Rebuilding Output..',
-                              '[\\] Rebuilding Output...']):
+    for c in itertools.cycle([Fore.BLUE +'[|]'+ Fore.RESET+' Rebuilding Output   ', Fore.BLUE+'[/]' + Fore.RESET+' Rebuilding Output.  ',Fore.BLUE+ '[-]' + Fore.RESET +' Rebuilding Output.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET +' Rebuilding Output...']):
         if doneChunked:
             break
-        sys.stdout.write('\r' + Fore.BLUE + c + Fore.RESET)
+        sys.stdout.write('\r' + c)
         sys.stdout.flush()
         time.sleep(0.25)
 
@@ -436,11 +436,11 @@ def getResults(lastdictsize):
 
 
 def animateWaitForImplant():
-    for c in itertools.cycle(['[|] Waiting for implant connection', '[/] Waiting for implant connection.',
-                              '[-] Waiting for implant connection..', '[\\] Waiting for implant connection...']):
+    for c in itertools.cycle([Fore.BLUE+'[|]' +Fore.RESET+' Waiting for implant connection   ',Fore.BLUE+ '[/]'+Fore.RESET+' Waiting for implant connection.  ',
+                              Fore.BLUE+'[-]'+Fore.RESET+' Waiting for implant connection.. ',Fore.BLUE+ '[\\]'+Fore.RESET+' Waiting for implant connection...']):
         if doneWaitForImplant:
             break
-        sys.stdout.write('\r' + Fore.BLUE + c + Fore.RESET)
+        sys.stdout.write('\r' + c)
         sys.stdout.flush()
         time.sleep(0.25)
 
@@ -507,12 +507,12 @@ def implantSleep(time, jitter):
 
 
 def animateFetchKeylog():
-    for c in itertools.cycle(['[|] Requesting Keystrokes', '[/] Requesting Keystrokes.', '[-] Requesting Keystrokes..',
-                              '[\\] Requesting Keystrokes...']):
+    for c in itertools.cycle([Fore.BLUE+'[|]'+Fore.RESET+' Requesting Keystrokes   ',Fore.BLUE+ '[/]'+Fore.RESET+' Requesting Keystrokes.  ',Fore.BLUE+ '[-]'+Fore.RESET+' Requesting Keystrokes.. ',
+                              Fore.BLUE+'[\\]'+Fore.RESET+' Requesting Keystrokes...']):
         if waitForKeys:
             print("\n\n")
             break
-        sys.stdout.write('\r' + Fore.BLUE + c + Fore.RESET)
+        sys.stdout.write('\r' +c)
         sys.stdout.flush()
         time.sleep(0.25)
 
@@ -619,10 +619,10 @@ def killimplant(clean):
 
 
 def animate():
-    for c in itertools.cycle(['[|] loading', '[/] loading.', '[-] loading..', '[\\] loading...']):
+    for c in itertools.cycle([Fore.BLUE+'[|]'+Fore.RESET+' loading   ',Fore.BLUE+ '[/]'+Fore.RESET+' loading.  ',Fore.BLUE+ '[-]'+Fore.RESET+' loading.. ',Fore.BLUE+ '[\\]'+Fore.RESET+' loading...']):
         if done:
             break
-        sys.stdout.write('\r' + Fore.BLUE + c + Fore.RESET)
+        sys.stdout.write('\r' +c)
         sys.stdout.flush()
         time.sleep(0.25)
 
