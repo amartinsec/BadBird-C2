@@ -43,7 +43,8 @@ When a canary token is triggered, it logs information about the request. BadBird
 through the triggered tokens and reporting mechanism. Using this method, there are two major limitations
 that BadBird C2 has to follow to maintain stability:
 - Data for a triggered token must have an encoded length of less than 7000 characters.
-- A token can only be triggered less than 50 times.
+- A token can only be triggered around 50 times.
+
 
 BadBird C2 abides by these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
 amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and update the implant.
@@ -152,3 +153,9 @@ Coming Soon
 This is meant for research purposes only. I made this very late at night out of my own curiosity to see if "it could be done". 
 
 Your actions are your responsibility so be responsible. Thinkst is an amazing platform that provides the canarytokens.org platform for free, and I'd recommend researching more if you are unfamiliar.
+
+<br>
+
+## Final Note
+As of now, the implant will get flagged by most AV/EDR/XDR/Or whatever its being called nowadays (usually from the keylogger functionality  (HackTool:SH/PythonKeylogger.B Defender alert)). I plan on porting the implant to C# but that won't be done until the current project is deemed stable.
+

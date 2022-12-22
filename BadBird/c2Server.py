@@ -11,6 +11,8 @@ import requests
 from bs4 import BeautifulSoup
 # Clear screen on start for colorama to work in Windows shell
 from colorama import init
+
+# TODO: fake_useragent is a pretty much a dead project. I'll add custom agents soon that will be used
 from fake_useragent import UserAgent
 
 

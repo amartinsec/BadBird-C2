@@ -35,12 +35,16 @@ def generateimplant(canaryManagementURL):
     if (implantType == "exe"):
         # more icons can be added to the /icon folder
         icons = os.listdir("resources/icons/")
-        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Available .ico files in:")
-        middle = int((len(icons) / 2))
-        for count, icon in enumerate(icons):
-            print(icon, end=" ")
-            if count == middle:
-                print("")
+        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Available .ico files:\n")
+        count = 1
+        for items in icons:
+            stringbuild = items
+            if count % 5 == 0:
+                stringbuild = stringbuild + "\n"
+            else:
+                stringbuild = stringbuild + "\t"
+            print(stringbuild.expandtabs(25), end="")
+            count += 1
 
         while True:
             iconFile = str(input(Fore.BLUE + "\n\n[!]" + Fore.RESET + " Icon file for the exe (choose one of the above): "))
