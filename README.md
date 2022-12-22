@@ -16,8 +16,8 @@
 *BadBird C2 is still in active development, but I didn't want to wait before releasing. I am working to improve stability as time permits.*
 
 It looks like the .exe implant is having stability issues. At first, I thought it was rate limiting but the default
-implant.py is working as intended. If testing, It's recommended to run implant.py and pass it the management url from the
-C2 server. I'll look into this in the upcoming days.
+implant.py is working as intended. If testing, It's recommended to run implant.py and pass it the management url that the 
+C2 server grabs. I'll look into this in the upcoming days.
 <br>
 
 ## Requirements
