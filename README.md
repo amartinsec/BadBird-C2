@@ -15,6 +15,9 @@
 
 *BadBird C2 is still in active development, but I didn't want to wait before releasing. I am working to improve stability as time permits.*
 
+It looks like the .exe implant is having stability issues. Af first, I thought it was rate limiting but the default
+implant.py is working as intended. If testing, It's recommended to run implant.py and pass it the management url from the
+C2 server. I'll look into this in the upcoming days.
 <br>
 
 ## Requirements
@@ -41,12 +44,12 @@ python3 c2Server.py
 ## Transfer of Data
 When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
 through the triggered tokens and reporting mechanism. Using this method, there are two major limitations
-that BadBird C2 has to follow to maintain stability:
+by using the platform:
 - Data for a triggered token must have an encoded length of less than 7000 characters.
 - A token can only be triggered around 50 times.
 
 
-BadBird C2 abides by these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
+BadBird C2 works around these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
 amount of alerts gets too high or a response has to be chunked, the C2 Server will request a new token and update the implant.
 
 <br>

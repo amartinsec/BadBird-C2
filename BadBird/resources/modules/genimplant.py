@@ -30,7 +30,8 @@ def generateimplant(canaryManagementURL):
     if ((implantType != "exe") and (implantType != "py")):
         print(Fore.RED + "\n[-]" + Fore.RESET + "Invalid entry, enter either `exe` or `py`.")
         print(implantType)
-        generateimplant()
+        #will fix soon if exe or py not entered
+        sys.exit(0)
 
     if (implantType == "exe"):
         # more icons can be added to the /icon folder
