@@ -160,4 +160,4 @@ Your actions are your responsibility so be responsible. Thinkst is an amazing pl
 <br>
 
 ## Final Note
-As of now, the implant will get flagged by most AV/EDR/XDR/Or whatever its being called nowadays (usually from the keylogger functionality  (HackTool:SH/PythonKeylogger.B Defender alert)). I plan on porting the implant to C# but that won't be done until the current project is deemed stable. If you want to obfuscate, try pyarmor or something.
+As of now, the implant will get flagged by most AV/EDR/XDR/Or whatever its being called nowadays (usually from the keylogger functionality  (HackTool:SH/PythonKeylogger.B Defender alert)). I plan on porting the implant to C# but that won't be done until the current project is deemed stable. If you want to obfuscate, try pyarmor or something...
