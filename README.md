@@ -75,6 +75,7 @@ Run `help` to see a list of commands within the BadBird shell.
     - The implant will attempt to take the best screenshot possible while staying under 45 token alerts
     - Multiple screens will cause the image to be shrunk to abide by the limit
     - Due to the large amount of data, a new token will be requested before and after the screenshot is received
+    - TODO: Add ability to specify monitor (3+ monitors will cause the screenshot to be low res)
 - keystrokes \<start stop fetch>
     - Will capture typed keys and the corresponding focused window
     - `keystrokes start` will task the implant to start logging keystrokes
