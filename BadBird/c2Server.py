@@ -748,7 +748,6 @@ def main():
 
             elif cmd.lower() == "pwd":
                 if connected == True:
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
                     if pwd == False:
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
                         pwd = True
