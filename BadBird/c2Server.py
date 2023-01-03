@@ -509,7 +509,6 @@ def animateFetchKeylog():
     for c in itertools.cycle([Fore.BLUE+'[|]'+Fore.RESET+' Requesting Keystrokes   ',Fore.BLUE+ '[/]'+Fore.RESET+' Requesting Keystrokes.  ',Fore.BLUE+ '[-]'+Fore.RESET+' Requesting Keystrokes.. ',
                               Fore.BLUE+'[\\]'+Fore.RESET+' Requesting Keystrokes...']):
         if waitForKeys:
-            print("\n\n")
             break
         sys.stdout.write('\r' +c)
         sys.stdout.flush()
