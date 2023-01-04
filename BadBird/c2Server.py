@@ -666,7 +666,7 @@ def main():
                     if choice == "y" or choice == "yes":
                         killimplant(False)
 
-                    if choice == "n" or choice == "no":
+                    elif choice == "n" or choice == "no":
                         pass
 
                     else:
@@ -790,6 +790,7 @@ def main():
                     if cmd != "":
                         taskCommand(cmd)
                         lastdictsize = getResults(lastdictsize)
+                        print("")
 
                 else:
                     print(

