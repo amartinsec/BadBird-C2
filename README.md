@@ -1,3 +1,7 @@
+<!--
+BadBird C2 Through Canarytokens
+Author: Austin Martin @amartinsec/blog.amartinsec.com
+-->
 ```
                                (  .      )        ( 
              .-.            )           (           )   )

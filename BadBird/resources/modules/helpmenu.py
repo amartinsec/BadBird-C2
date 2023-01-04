@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+# BadBird C2 Through Canarytokens
+# Author: Austin Martin @amartinsec/blog.amartinsec.com
 from colorama import Fore, init
 init(convert=True)
 

