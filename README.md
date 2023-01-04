@@ -123,6 +123,8 @@ Run `help` to see a list of commands within the BadBird shell.
 - PWD
     - Adds the current working directory to the BadBird shell
     - Less OPSEC safe
+- local \<command>
+    - Runs a local command from the C2 Server
 
 ### Features coming soon
 

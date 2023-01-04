@@ -44,7 +44,8 @@ def help():
     print("   Exit:\tExits the C2".expandtabs(35))
     print("   Help:\tShows the help menu".expandtabs(35))
     print("   Canary-info:\tShows the current canary token info".expandtabs(35))
-    print("   PWD:\tPrints the current working directory in each return (less opsec safe)".expandtabs(35))
+    print("   PWD:\tPrints the current working directory in each return".expandtabs(35))
+    print("   local <command>:\tExecutes a command on the C2Server machine".expandtabs(35))
 
     print("\nCommands coming soon:")
     print("   Log:\tLogs all commands and output to text file within loot (TODO)".expandtabs(35))

@@ -7,6 +7,7 @@
 import base64
 import platform
 import re
+import subprocess
 
 import requests
 from bs4 import BeautifulSoup
@@ -685,6 +686,15 @@ def main():
             elif cmd.lower() == "help":
                 help()
 
+            elif cmd.lower().startswith("local "):
+                try:
+                    print(Fore.BLUE + "[!]" + Fore.RESET + " Local Command Result:")
+                    out = subprocess.run(cmd.split("local ")[1], shell=True)
+
+                except:
+                    pass
+
+
 
             elif cmd.lower().startswith("connect "):
                 try:
@@ -791,12 +801,18 @@ def main():
 
             elif cmd.lower() == "post-exp":
                 if connected:
-                    print(Fore.BLUE + "[!]" + Fore.RESET + " Entering BadBird post-exploitation shell...\n")
-                    cmd = postExpShell()
-                    if cmd != "":
-                        taskCommand(cmd)
-                        lastdictsize = getResults(lastdictsize)
-                        print("")
+                    print("\n")
+                    while True:
+                        cmd = postExpShell()
+                        if cmd != "":
+                            taskCommand(cmd)
+                            lastdictsize = getResults(lastdictsize)
+                            print("")
+                        # Else - means `back` command was entered indicating exit of shell
+                        else:
+                            break
+
+
 
                 else:
                     print(
@@ -930,6 +946,7 @@ def main():
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
 
 
             elif cmd.lower().startswith("shell "):
