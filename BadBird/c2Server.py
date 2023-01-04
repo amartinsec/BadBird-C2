@@ -8,7 +8,6 @@ import base64
 import platform
 import re
 import subprocess
-
 import requests
 from bs4 import BeautifulSoup
 # TODO: fake_useragent is a pretty much a dead project. I'll add custom agents soon that will be used
@@ -43,6 +42,7 @@ ps = False
 waitForKeys = False
 lootpath = ""
 requestedfile = ""
+
 
 
 def generate_canarytoken():
@@ -622,6 +622,31 @@ def killimplant(clean):
     response = requests.get(url, headers=headers)
     print(Fore.BLUE + "[!]" + Fore.RESET + " Implant Killed!\n")
 
+def serverExit():
+    global connected
+    if connected:
+        print(Fore.RED + "[-]" + Fore.RESET + " You currently have an implant connected.")
+        print(
+            Fore.RED + "[-]" + Fore.RESET + " Would you like to kill the implant before disconnecting? (`y`/`n`/`b`)")
+        choice = input(Fore.RED + "[-]" + Fore.RESET + " Choice: ").lower()
+        if choice == "y" or choice == "yes":
+            killimplant(False)
+            sys.exit()
+
+        elif choice == "n" or choice == "no":
+            sys.exit()
+
+        elif choice == "b" or choice == "back":
+            return
+
+        else:
+            print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n/b` or `yes/no/back`")
+            return
+
+    else:
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Exiting...")
+        sys.exit(1)
+
 
 def animate():
     for c in itertools.cycle(
@@ -634,6 +659,7 @@ def animate():
         time.sleep(0.25)
 
 
+
 def main():
     init(convert=True)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -642,7 +668,7 @@ def main():
     currentOS = platform.system()
     if currentOS != "Windows":
         print(
-            Fore.RED + "\n[-]" + Fore.RESET + " As of now, must be ran on Windows. Sorry :( Current OS: " + currentOS + "\n")
+            Fore.RED + "\n[-]" + Fore.RESET + " As of now, must be ran on Windows. Sorry :(... Current OS: " + currentOS + "\n")
         return
 
     global lastdictsize
@@ -656,6 +682,7 @@ def main():
     global canaryManagementURL
     try:
         while True:
+
             if pwd == False:
                 cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
             else:
@@ -665,23 +692,7 @@ def main():
                     cmd = input(Fore.GREEN + "BadBird>> " + Fore.RESET)
 
             if cmd.lower() == "exit":
-                if connected:
-                    print(Fore.RED + "[-]" + Fore.RESET + " You currently have an implant connected.")
-                    print(
-                        Fore.RED + "[-]" + Fore.RESET + " Would you like to kill the implant before disconnecting? (`y`/`n`)")
-                    choice = input(Fore.RED + "[-]" + Fore.RESET + " Choice: ").lower()
-                    if choice == "y" or choice == "yes":
-                        killimplant(False)
-
-                    elif choice == "n" or choice == "no":
-                        pass
-
-                    else:
-                        print(Fore.RED + "[-]" + Fore.RESET + " Invalid choice. Options are `y/n` or `yes/no`")
-                        continue
-
-                print(Fore.BLUE + "[!]" + Fore.RESET + " Exiting...")
-                sys.exit(1)
+                serverExit()
 
             elif cmd.lower() == "help":
                 help()
@@ -811,9 +822,6 @@ def main():
                         # Else - means `back` command was entered indicating exit of shell
                         else:
                             break
-
-
-
                 else:
                     print(
                         Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
@@ -964,6 +972,12 @@ def main():
             # If none of the above is true
             else:
                 print(Fore.RED + "[-]" + Fore.RESET + " Invalid command. Type `help` for a list of commands\n")
+
+    except KeyboardInterrupt:
+        print()
+        serverExit()
+        pass
+
 
     except Exception as e:
         print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
