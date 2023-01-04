@@ -108,7 +108,6 @@ Run `help` to see a list of commands within the BadBird shell.
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
 - post-exp
   - BadBird post-exploitation shell (currently in development)
-  - Only steal-wifi is implemented at this time
 
 ### Configuration/Misc
 

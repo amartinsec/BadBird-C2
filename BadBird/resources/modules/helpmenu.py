@@ -37,7 +37,7 @@ def help():
     print("   Kill:\tKills the implant. `Kill clean` will kill the implant and removes implant (TODO Add implant removal)".expandtabs(35))
     print("   Sleep <seconds> <jitter %>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter a value to randmly modify sleep time by that percentage".expandtabs(35))
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
-    print("   Post-exp:\tEnter the post-exp shell - only steal-wifi is implemented at this time (TODO)".expandtabs(35))
+    print("   Post-exp:\tEnter the post-exp shell - (TODO most modules)".expandtabs(35))
 
     print("\nConfiguration/Misc:")
     print("   Email <blah@foobar.com>:\tChanges the email used to create tokens.".expandtabs(35))

