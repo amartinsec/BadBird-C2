@@ -818,6 +818,20 @@ def main():
                                 taskCommand(cmd)
                                 lastdictsize = getResults(lastdictsize)
                                 print("")
+                                """
+                                TODO - Save output from post-exp
+                                try:
+                                    with open(lootpath + "post-exp.txt", "a+") as f:
+                                        f.write(lastdictsize)
+                                        f.close()
+                                    print(
+                                        Fore.BLUE + "\n[!]" + Fore.RESET + " Saved/Updated post-exp command result: " + lootpath + "post-exp.txt\n")
+
+                                except Exception as e:
+                                    print(Fore.RED + "[-]" + Fore.RESET + " Error saving result: " + str(e))
+                                    pass
+                                """
+
                             # Else - means `back` command was entered indicating exit of shell
                             else:
                                 break
