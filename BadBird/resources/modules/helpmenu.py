@@ -17,7 +17,6 @@ def welcome():
     print("Type `help` for a list of commands\n")
 
 
-
 def help():
 
     print("\nCreation:")
