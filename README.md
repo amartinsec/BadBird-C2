@@ -108,6 +108,14 @@ Run `help` to see a list of commands within the BadBird shell.
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
 - post-exp
   - BadBird post-exploitation shell (currently in development)
+  - Current implemented features:
+    - steal-wifi: Grabs all saved Wifi Creds
+    - basic-enum: Grabs basic system information
+    - schedtasks: Grabs all scheduled tasks
+    - killEtw: Sets the `COMPlus_ETWEnabled` environment var to 0 to disable ETW logging
+    - wdigest-downgrade: Adds reg entry to force Wdigest credential caching. Wait for a new login then dump LSASS for cleartext creds
+    - elevated: Checks for the AlwaysInstalledElevated reg key
+    - mimikatz: Grabs Invoke-Mimikatz.ps1 (PowerSploit) from Github and executes it in memory
 
 ### Configuration/Misc
 

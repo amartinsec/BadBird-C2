@@ -30,7 +30,7 @@ def postExpHelp():
     print("   Basic-enum:\tBasic enumeration on the system".expandtabs(40))
     print("   Schedtasks:\tGrabs scheduled tasks on the system".expandtabs(40))
     print("   killETW:\tAttempts to disable Event Tracing by setting COMPlus_ETWEnabled environment var to 0".expandtabs(40))
-    print("   Wdigest-downgrade:\tAddes reg entry to force Wdigest credential caching. Wait for a new login then dump LSASS for cleartext creds".expandtabs(40))
+    print("   Wdigest-downgrade:\tAdds reg entry to force Wdigest credential caching. Wait for a new login then dump LSASS for cleartext creds".expandtabs(40))
     print("   Elevated:\tChecks for the AlwaysInstalledElevated reg key for priv-esc".expandtabs(40))
     print("   Mimikatz:\tGrabs Invoke-Mimikatz.ps1 (PowerSploit) from Github and executes it in memory".expandtabs(40))
     print("   Killproc:\tKills a process by PID(TODO)".expandtabs(40))
