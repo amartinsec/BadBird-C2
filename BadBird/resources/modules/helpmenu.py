@@ -39,6 +39,12 @@ def help():
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
     print("   Post-exp:\tEnter the post-exp shell - (TODO most modules)".expandtabs(35))
 
+    print("\nSession Management:")
+    print("   Background:\tBackground the current connection (TODO)".expandtabs(35))
+    print("   Sessions:\tLists the current sessions (TODO)".expandtabs(35))
+    print("   Switch <session id>:\tSwitch to a different session (TODO)".expandtabs(35))
+
+
     print("\nConfiguration/Misc:")
     print("   Email <blah@foobar.com>:\tChanges the email used to create tokens.".expandtabs(35))
     print("   Exit:\tExits the C2".expandtabs(35))
@@ -53,5 +59,5 @@ def help():
     print("   Upload:\tTasks implant to upload a file (TODO)".expandtabs(35))
     print("   Self-destruct:\tImplant will remove itself after specified time of last C2 server checkin  (TODO)".expandtabs(35))
     print("   Canary-endpoint:\tSpecify an endpoint for the implant to send results to. Default is a random path from the platforms options (TODO)".expandtabs(35))
-    print("   Token-type:\tSpecifies the type of token to use (currently using web bug/URL token that canarytokens.org provides) (TODO)".expandtabs(35))
-    print("   Background:\tBackground a current connection (TODO)\n".expandtabs(35))
+    print("   Token-type:\tSpecifies the type of token to use (currently using web bug/URL token that canarytokens.org provides) (TODO)\n".expandtabs(35))
+

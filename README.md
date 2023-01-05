@@ -148,8 +148,11 @@ Run `help` to see a list of commands within the BadBird shell.
   - Sets the canarytoken alerting endpoint to use (currently random from options that canarytokens.org provides)
 - token-type
   - Specifies the type of token to use (currently using web bug/URL token that canarytokens.org provides)
--background
+- background
   - Backgrounds the implant
+- sessions
+  - Lists all active sessions
+
 
 
 <br>

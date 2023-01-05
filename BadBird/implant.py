@@ -369,7 +369,7 @@ def main():
 
     while True:
         try:
-            # sleep before checking for new tasking. Add jitter
+            # sleep before checking for new tasking. Add jitter if enabled
             if float(jitter) <= 0:
                 time.sleep(int(sleepTime))
             else:
