@@ -173,11 +173,9 @@ Run `help` to see a list of commands within the BadBird shell.
 ## Detection 
 
 Currently, all data is transmitted through the useragent (I plan on changing this eventually by adding data in the request headers). 
-This means that monitoring the useragent length is a good way to detect BadBird. After some quick research of the most common
+This means that monitoring the user-agent is a good way to strange activity. After some quick research of the most common
 useragent lengths, I found that the longest of the averages was 162 bytes. Here's a basic Snort rule to detect traffic that 
-has a user-agent length greater than 200 bytes:
-
-```
+has a user-agent length greater than 200 bytes (BadBird C2 will trigger this alert):
 
 ```Snort
 alert tcp $EXTERNAL_NET any -> $HOME_NET 80 (msg:"Suspicious User-Agent"; flow:to_server,established; content:"User-Agent:"; nocase; content:".{200,}"; nocase; classtype:bad-unknown; sid:10000001; rev:1;)
