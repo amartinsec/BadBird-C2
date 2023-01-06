@@ -25,6 +25,7 @@ Author: Austin Martin @amartinsec/blog.amartinsec.com
 - Python 3
 - Implant/payload must run on Windows
 - C2 Server (c2Server.py) must *currently* be run on Windows (working on *nix support)
+  - I haven't narrowed down the issue, but there's massive stability issues when running the C2 server from *nix.
   - Due to the current color scheme, it's recommended to run from cmd.exe (powershell's blue background causes the color scheme to be hard to read)
   - This will be fixed soon
 
