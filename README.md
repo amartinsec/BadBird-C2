@@ -45,10 +45,10 @@ python3 c2Server.py
 
 ## Transfer of Data
 When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
-through the triggered tokens and reporting mechanism. Using this method, there are two major limitations
+through the user-agent of the token. Using this method, there are two major limitations
 by using the platform:
 - Data for a triggered token must have an encoded length of less than 7000 characters.
-- A token can only be triggered around 50 times.
+- A token can only be triggered ~50 times.
 
 
 BadBird C2 works around these limitations by splitting large responses into chunks and having the C2 Server reassemble. If the
@@ -174,7 +174,15 @@ Run `help` to see a list of commands within the BadBird shell.
 
 Currently, all data is transmitted through the useragent (I plan on changing this eventually by adding data in the request headers). 
 This means that monitoring the useragent length is a good way to detect BadBird. After some quick research of the most common
-useragent lengths, I found that the longest of the averages was 162 bytes. 
+useragent lengths, I found that the longest of the averages was 162 bytes. Here's a basic Snort rule to detect traffic that 
+has a user-agent length greater than 200 bytes:
+
+```
+
+```Snort
+alert tcp $EXTERNAL_NET any -> $HOME_NET 80 (msg:"Suspicious User-Agent"; flow:to_server,established; content:"User-Agent:"; nocase; content:".{200,}"; nocase; classtype:bad-unknown; sid:10000001; rev:1;)
+
+```
 
 Will publish better and more up-to-date detections once tool is more complete
 
