@@ -181,7 +181,7 @@ has a user-agent length greater than 200 bytes (BadBird C2 will trigger this ale
 alert tcp $EXTERNAL_NET any -> $HOME_NET 80 (msg:"Suspicious User-Agent"; flow:to_server,established; content:"User-Agent:"; nocase; content:".{200,}"; nocase; classtype:bad-unknown; sid:10000001; rev:1;)
 ```
 
-Will publish better and more up-to-date detections once tool is more complete
+(TODO:) Publish better and more up-to-date detections once tool is more complete
 
 <br>
 
