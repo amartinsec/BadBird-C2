@@ -58,6 +58,12 @@ amount of alerts gets too high or a response has to be chunked, the C2 Server wi
 
 ## Commands/Features
 
+**Update:** Encryption of traffic has been enabled. Change the key to something unique. If using template.py, change the key in
+both the c2Server.py and implant.py. Generating a payload through the BadBird shell `generate-implant` command will update
+the generated payload
+
+<br>
+
 Run `help` to see a list of commands within the BadBird shell.
 
 ### Creation

