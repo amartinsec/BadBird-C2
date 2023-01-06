@@ -23,8 +23,8 @@ Author: Austin Martin @amartinsec/blog.amartinsec.com
 
 ## Requirements
 - Python 3
-- Implant must run on Windows
-- C2 Server must *currently* be run on Windows (working on *nix support)
+- Implant/payload must run on Windows
+- C2 Server (c2Server.py) must *currently* be run on Windows (working on *nix support)
   - Due to the current color scheme, it's recommended to run from cmd.exe (powershell's blue background causes the color scheme to be hard to read)
   - This will be fixed soon
 
@@ -170,7 +170,12 @@ Run `help` to see a list of commands within the BadBird shell.
 <br>
 
 ## Detection 
-Coming Soon
+
+Currently, all data is transmitted through the useragent (I plan on changing this eventually by adding data in the request headers). 
+This means that monitoring the useragent length is a good way to detect BadBird. After some quick research of the most common
+useragent lengths, I found that the longest of the averages was 162 bytes. 
+
+Will publish better and more up-to-date detections once tool is more complete
 
 <br>
 

@@ -33,10 +33,12 @@ keys = ""
 klogging = False
 lastActiveWindow = ""
 encrypted = True
-
-# Will add random key option for generated payloads later. I am focusing on the basic implementation first so that's why it's hardcoded
-key = b'dRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t'
 BLOCK_SIZE = 32
+
+#---------------Change Me---------------#
+key = b'dRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t'
+#---------------------------------------#
+
 
 def encrypt(message):
     if encrypted:
