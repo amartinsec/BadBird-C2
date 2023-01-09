@@ -43,6 +43,7 @@ python3 c2Server.py
 <br>
 
 
+
 ## Transfer of Data
 When a canary token is triggered, it logs information about the request. BadBird C2 works by passing data
 through the user-agent of the token. Using this method, there are two major limitations
@@ -59,9 +60,9 @@ amount of alerts gets too high or a response has to be chunked, the C2 Server wi
 
 ## Commands/Features
 
-**Update (1/6/23):** Encryption of traffic has been enabled. Change the key to something unique. If using template.py, change the key in
+**Update (1/6/23):** AES encryption of traffic has been enabled. Change the key to something unique. If using the default implant.py, change the key in
 both the c2Server.py and implant.py. Generating a payload through the BadBird shell `generate-implant` command will update
-the generated payload
+the generated payload with the key.
 
 <br>
 
@@ -70,7 +71,10 @@ Run `help` to see a list of commands within the BadBird shell.
 ### Creation
 
 - create-token
-    - Fetches a new token from Canarytokens.org. Copy and paste the management url if running implant.py
+    - Fetches a new token from Canarytokens.org. Copy and paste the management url if running the template implant.py:
+<img src="https://github.com/amartinsec/BadBird/raw/main/Media/implant.png"/>
+
+
 - create-implant
     - Generates .exe (using pyinstaller) or .py implant payload. The resulting .exe/.py will have the management url added.
     - If creating a .exe, you can choose one of the .ico files stored in resources/icons/ to use as the icon.

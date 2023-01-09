@@ -37,6 +37,7 @@ def help():
     print("   Sleep <seconds> <jitter %>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter a value to randmly modify sleep time by that percentage".expandtabs(35))
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
     print("   Post-exp:\tEnter the post-exp shell".expandtabs(35))
+    print("   Self-destruct <hours>:\tImplant will remove itself after specified hours of last C2 server checkin  (TODO)".expandtabs(35))
 
     print("\nSession Management:")
     print("   Background:\tBackground the current connection (TODO)".expandtabs(35))
@@ -55,7 +56,6 @@ def help():
     print("   Log:\tLogs all commands and output to text file within loot (TODO)".expandtabs(35))
     print("   Connect <management url>:\tConnects to a listening implant (TODO)".expandtabs(35))
     print("   Upload:\tTasks implant to upload a file (TODO)".expandtabs(35))
-    print("   Self-destruct:\tImplant will remove itself after specified time of last C2 server checkin  (TODO)".expandtabs(35))
     print("   Canary-endpoint:\tSpecify an endpoint for the implant to send results to. Default is a random path from the platforms options (TODO)".expandtabs(35))
     print("   Token-type:\tSpecifies the type of token to use (currently using web bug/URL token that canarytokens.org provides) (TODO)\n".expandtabs(35))
 

