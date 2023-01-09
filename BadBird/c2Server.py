@@ -710,7 +710,10 @@ def main():
     currentOS = platform.system()
     if currentOS != "Windows":
         print(
-            Fore.RED + "\n[-]" + Fore.RESET + " Warning: Not sure why this is unstable on *nix. Sorry :( ...\n")
+            Fore.RED + "\n[-]" + Fore.RESET + " Some highlight/color functionality will not work in a nix shell")
+        print(
+            Fore.RED + "\n[-]" + Fore.RESET + " I'm fixing this. Sorry :<( \n")
+
 
     checkKey()
     global lastdictsize

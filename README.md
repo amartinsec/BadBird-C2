@@ -39,9 +39,8 @@ amount of alerts gets too high or a response has to be chunked, the C2 Server wi
 ## Requirements
 - Python 3
 - Implant/payload must run on Windows
-- c2Server.py was having issues running on *nix
-  - I haven't narrowed down the issue, but there's massive stability issues.
-  - Due to the current color scheme, it's recommended to run from cmd.exe.
+- c2Server.py will not have all colors/highlighting if ran in a nix shell
+  - Due to the current color scheme, it's recommended to run from cmd.exe
     - The above will be fixed soon
 
 <br>
