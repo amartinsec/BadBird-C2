@@ -1002,9 +1002,6 @@ def main():
         pass
 
 
-
-
-
 # Animations ############################################################################################################
 def chunkAnimate():
     for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Rebuilding Output   ',

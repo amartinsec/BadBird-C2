@@ -28,16 +28,11 @@ def postExpHelp():
     print("   Steal-wifi:\tGrabs all saved wireless credentials".expandtabs(40))
     print("   Basic-enum:\tBasic enumeration on the system".expandtabs(40))
     print("   Schedtasks:\tGrabs scheduled tasks on the system".expandtabs(40))
-    print("   killETW:\tAttempts to disable Event Tracing by setting COMPlus_ETWEnabled environment var to 0".expandtabs(40))
+    print("   KillETW:\tAttempts to disable Event Tracing by setting COMPlus_ETWEnabled environment var to 0".expandtabs(40))
     print("   Wdigest-downgrade:\tAdds reg entry to force Wdigest credential caching. Wait for a new login then dump LSASS for cleartext creds".expandtabs(40))
     print("   Elevated:\tChecks for the AlwaysInstalledElevated reg key for priv-esc".expandtabs(40))
     print("   Mimikatz:\tGrabs Invoke-Mimikatz.ps1 (PowerSploit) from Github and executes it in memory".expandtabs(40))
-    print("   Killproc:\tKills a process by PID(TODO)".expandtabs(40))
-    print("   Sysmon-kill:\tStops sysmon(TODO)".expandtabs(40))
     print("   Byod:\tAttempts to elevate to SYSTEM by using the BYOD (Bring-your-own-driver) method(TODO)".expandtabs(40))
-    print("   Cursed-chrome:\tCursed Chrome implementation(TODO)".expandtabs(40))
-    print("   Team-thief <`cookies`/`snoop`>:\tSteal the user's MS Teams session token or grabs cached conversations(TODO)".expandtabs(40))
-    print("   Reg stuff:\tFun post-exp registry stuff here(TODO)\n".expandtabs(40))
 
 showArt = True
 def postExpShell(encrypted):
