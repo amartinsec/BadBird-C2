@@ -118,6 +118,8 @@ Run `help` to see a list of commands within the BadBird shell.
     - Add jitter percentage amount to enable random jitter
 - download \<filename>:
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
+- upload \<filename>:
+  - Uploads a file to the implant's host
 - post-exp:
   - Enters into the BadBird post-exploitation shell
   - Current implemented features:
@@ -154,8 +156,6 @@ Run `help` to see a list of commands within the BadBird shell.
   - Logs everything to a .txt file stored within the loot dir
 - connect:
   - Connects to a listening implant
-- upload:
-  - Uploads a file to the implant's host
 - canary-endpoint:
   - Sets the canarytoken alerting endpoint to use (currently random from options that canarytokens.org provides)
 - token-type:

