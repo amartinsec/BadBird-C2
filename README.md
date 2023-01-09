@@ -37,9 +37,9 @@ amount of alerts gets too high or a response has to be chunked, the C2 Server wi
 ## Requirements
 - Python 3
 - Implant/payload must run on Windows
-- C2 Server (c2Server.py) was having issues running on *nix
-  - I haven't narrowed down the issue, but there's massive stability issues when running the C2 server from *nix.
-  - Due to the current color scheme, it's recommended to run from cmd.exe (powershell's blue background causes the color scheme to be hard to read)
+- c2Server.py was having issues running on *nix
+  - I haven't narrowed down the issue, but there's massive stability issues.
+  - Due to the current color scheme, it's recommended to run from cmd.exe.
     - The above will be fixed soon
 
 <br>
@@ -58,8 +58,8 @@ python3 c2Server.py
 
 ## Commands/Features
 
-**Update (1/6/23):** AES encryption of traffic has been enabled. Change the key to something unique. If using the default implant.py, change the key in
-both the c2Server.py and implant.py. Generating a payload through the BadBird shell `generate-implant` command will update
+**Update (1/6/23):** Traffic is now AES encrypted. Change the key to something unique or anyone can decrypt the task/result
+if they get the management URL (The default key is ```b'badbirdbadbirdbadbirdbadbirdbadb'```. If using the default implant.py, change the key in both c2Server.py and implant.py. Generating a payload through the BadBird shell `generate-implant` command will update
 the generated payload with the key.
 
 <br>
