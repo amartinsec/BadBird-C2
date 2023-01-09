@@ -7,6 +7,11 @@ pyinstaller-hooks-contrib==2022.14
 pynput==1.7.6
 pywin32==305
 requests==2.28.1
+aes==1.2.0
+crypto==1.4.1
+pycryptodome==3.16.0
+pycryptodomex==3.9.7
+
 
 # Will remove these dependencies in the future
 fake-useragent==1.1.0
