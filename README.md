@@ -71,12 +71,13 @@ Run `help` to see a list of commands within the BadBird shell.
 ### Creation
 
 - create-token
-    - Fetches a new token from Canarytokens.org. Copy and paste the management url if running the template implant.py:
+    - Fetches a new token from Canarytokens.org. Copy and paste the management url if using the template `implant.py`:
 <img src="https://github.com/amartinsec/BadBird/raw/main/Media/implant.png"/>
 
 
 - create-implant
-    - Generates .exe (using pyinstaller) or .py implant payload. The resulting .exe/.py will have the management url added.
+    - Fetches a new token from Canarytokens.org and generates a new implant. The implant is saved to the `payloads/<chosen name>/` directory.
+    - Generates a .exe (using pyinstaller) or .py implant payload. The resulting .exe/.py will have the management url added.
     - If creating a .exe, you can choose one of the .ico files stored in resources/icons/ to use as the icon.
 
 ### Implant Interaction
