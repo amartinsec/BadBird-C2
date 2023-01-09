@@ -20,7 +20,6 @@ def welcome():
     print(Fore.RESET)
     print("Type `help` for a list of commands\n")
 
-
 def help():
 
     print("\nCreation:")
@@ -37,13 +36,12 @@ def help():
     print("   Kill:\tKills the implant. `Kill clean` will kill the implant and removes implant (TODO Add implant removal)".expandtabs(35))
     print("   Sleep <seconds> <jitter %>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter a value to randmly modify sleep time by that percentage".expandtabs(35))
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
-    print("   Post-exp:\tEnter the post-exp shell - (TODO most modules)".expandtabs(35))
+    print("   Post-exp:\tEnter the post-exp shell".expandtabs(35))
 
     print("\nSession Management:")
     print("   Background:\tBackground the current connection (TODO)".expandtabs(35))
     print("   Sessions:\tLists the current sessions (TODO)".expandtabs(35))
     print("   Switch <session id>:\tSwitch to a different session (TODO)".expandtabs(35))
-
 
     print("\nConfiguration/Misc:")
     print("   Email <blah@foobar.com>:\tChanges the email used to create tokens.".expandtabs(35))

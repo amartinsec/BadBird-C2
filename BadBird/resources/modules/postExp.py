@@ -4,10 +4,9 @@
 # Author: Austin Martin @amartinsec/blog.amartinsec.com
 from colorama import Fore
 
-
 def postExpWelcome():
     #More ASCII
-    # fire ascii from https://ascii.co.uk/art/fire
+    # ascii fire from https://ascii.co.uk/art/fire
     print(Fore.RED)
     print("                           (  .      )        ( ")
     print("         .-.            )           (           )   )")
@@ -87,4 +86,5 @@ def postExpShell(encrypted):
 
         else:
             print(Fore.RED + "[-]" + Fore.RESET + " Unknown command: " + user_input)
+            print(Fore.RED + "[-]" + Fore.RESET + " Type `help` for a list of commands or `back` to return to the main menu")
 

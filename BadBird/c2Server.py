@@ -863,7 +863,7 @@ def main():
                 elif cmd.lower() == "screenshot":
                     if connected:
                         print("TOFIX")
-                        """TOFIX
+                        """
                         print(Fore.BLUE + "\n[!]" + Fore.RESET + " Generating new token for screenshot")
                         fallback()
                         time.sleep(1)
