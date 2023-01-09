@@ -37,7 +37,7 @@ def help():
     print("   Sleep <seconds> <jitter %>:\tChanges the time that the implant sleeps(default 5 seconds). Use jitter a value to randmly modify sleep time by that percentage".expandtabs(35))
     print("   Download <filename>:\tTasks implant to download remote file".expandtabs(35))
     print("   Post-exp:\tEnter the post-exp shell".expandtabs(35))
-    print("   Self-destruct <hours>:\tImplant will remove itself after specified hours of last C2 server checkin  (TODO)".expandtabs(35))
+    print("   Self-destruct <hours>:\tImplant will remove itself after specified hours of last C2 server checkin".expandtabs(35))
 
     print("\nSession Management:")
     print("   Background:\tBackground the current connection (TODO)".expandtabs(35))
