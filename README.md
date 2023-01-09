@@ -2,19 +2,10 @@
 BadBird C2 Through Canarytokens
 Author: Austin Martin @amartinsec/blog.amartinsec.com
 -->
-```
-                               (  .      )        ( 
-             .-.            )           (           )   )
-            (  '>                 .  '   .   '  .  '  . 
-            /  \        (    , )       (.   )  (   ',    )
-           /  \ |         .' ) ( . )    ,  ( ,     )   ( .
-          / ,_//       ). , ( .   (  ) ( , ')  .' (  ,    ) 
-    ~~~~~//'--'~~~~~~~(_,) . ), ) _) _,')  (, ) '. )  ,. (' )~~~~
-    ~~~~//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ~~~//~~~~~~~~~~~~~~~~~~~~~~~~~~ BadBird C2~~~~~~~~~~~~~~~~~~~~~
-                      Canary Tokens For Command and Control
-                         @amartinsec/blog.amartinsec.com
-```
+
+<img src="https://github.com/amartinsec/BadBird/raw/main/Media/header.png"/>
+
+
 # BadBird C2
 
 My blogpost about canary tokens can be found [here.](https://blog.amartinsec.com/posts/canary/) 
