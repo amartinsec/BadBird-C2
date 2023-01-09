@@ -17,7 +17,9 @@ Author: Austin Martin @amartinsec/blog.amartinsec.com
 ```
 # BadBird C2
 
-*BadBird C2 is still in active development, but I didn't want to wait before releasing. I am working to improve stability as time permits.*
+My blogpost about canary tokens can be found [here.](https://blog.amartinsec.com/posts/canary/) 
+
+*BadBird C2 is still in development, but I didn't want to wait before releasing. I am working to improve stability as time permits.*
 
 <br>
 
@@ -89,7 +91,7 @@ Run `help` to see a list of commands within the BadBird shell.
     - The implant will attempt to take the best screenshot possible while staying under 45 token alerts
     - Multiple screens will cause the image to be shrunk to abide by the limit
     - Due to the large amount of data, a new token will be requested before and after the screenshot is received
-    - TODO: Add ability to specify monitor (3+ monitors will cause the screenshot to be low res)
+    - TODO: Add ability to specify monitor (multiple monitors will cause the screenshot to be low res)
 - keystrokes \<start stop fetch>:
     - Will capture typed keys and the corresponding focused window
     - `keystrokes start` will task the implant to start logging keystrokes
@@ -104,9 +106,9 @@ Run `help` to see a list of commands within the BadBird shell.
       --------------------------------------------------------------
   ```
 - ps:
-    - Prints the running processes on the host and highlights processes based on type
+    - Prints all processes and highlights based on suspected type
 - fallback:
-    - Generates a new canarytoken for the and C2 to use implant switch to it
+    - Grabs a new canarytoken for the and C2 to use implant switch to it
     - C2 Server will coordinate with the implant and automatically switch to the new token
 - kill:
     - Kills the implant
@@ -117,7 +119,7 @@ Run `help` to see a list of commands within the BadBird shell.
 - download \<filename>:
   - Downloads a file from the implant's host and stores it in loot/\<implant name>/
 - post-exp:
-  - BadBird post-exploitation shell (currently in development)
+  - Enters into the BadBird post-exploitation shell
   - Current implemented features:
     - steal-wifi: Grabs all saved Wi-Fi Creds
     - basic-enum: Grabs basic system information
@@ -126,7 +128,7 @@ Run `help` to see a list of commands within the BadBird shell.
     - wdigest-downgrade: Adds reg entry to force Wdigest credential caching. Wait for a new login then dump LSASS for cleartext creds
     - elevated: Checks for the AlwaysInstalledElevated reg key
     - mimikatz: Grabs Invoke-Mimikatz.ps1 (PowerSploit) from Github and executes it in memory
-
+    - back: Returns to the main BadBird shell
 - self-destruct \<hours>:
   - Kills the implant after x hours of last check-in with the C2 Server (default is 1 week)
 
@@ -144,7 +146,7 @@ Run `help` to see a list of commands within the BadBird shell.
 - PWD:
     - Adds the current working directory to the BadBird shell
 - local \<command>:
-    - Runs a local command from the C2 Server
+    - Runs a local command on the c2Server.py host
 
 ### Features coming soon
 
