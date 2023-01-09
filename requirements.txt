@@ -11,9 +11,6 @@ aes==1.2.0
 crypto==1.4.1
 pycryptodome==3.16.0
 pycryptodomex==3.9.7
-
-
-# Will remove these dependencies in the future
 fake-useragent==1.1.0
 PyYAML==6.0
 ua-parser==0.16.1
